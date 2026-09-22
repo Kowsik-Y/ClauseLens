@@ -1,0 +1,296 @@
+./src/app/api/qa/route.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+     2  2 │   import { type NextRequest, NextResponse } from 'next/server';
+     3  3 │   
+     4    │ - const·ai·=·new·GoogleGenAI({·
+        4 │ + const·ai·=·new·GoogleGenAI({
+     5  5 │   	apiKey: process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY,
+     6    │ - → ...(process.env.GEMINI_BASE_URL·&&·{·httpOptions:·{·baseUrl:·process.env.GEMINI_BASE_URL·}·})
+        6 │ + → ...(process.env.GEMINI_BASE_URL·&&·{
+        7 │ + → → httpOptions:·{·baseUrl:·process.env.GEMINI_BASE_URL·},
+        8 │ + → }),
+     7  9 │   });
+     8 10 │   
+  
+
+./src/app/api/compare/route.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+     2  2 │   import { type NextRequest, NextResponse } from 'next/server';
+     3  3 │   
+     4    │ - const·ai·=·new·GoogleGenAI({·
+        4 │ + const·ai·=·new·GoogleGenAI({
+     5  5 │   	apiKey: process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY,
+     6    │ - → ...(process.env.GEMINI_BASE_URL·&&·{·httpOptions:·{·baseUrl:·process.env.GEMINI_BASE_URL·}·})
+        6 │ + → ...(process.env.GEMINI_BASE_URL·&&·{
+        7 │ + → → httpOptions:·{·baseUrl:·process.env.GEMINI_BASE_URL·},
+        8 │ + → }),
+     7  9 │   });
+     8 10 │   
+  
+
+./src/app/api/analyze/route.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+      3   3 │   
+      4   4 │   // Ensure the API key is set in your .env or .env.local file
+      5     │ - const·ai·=·new·GoogleGenAI({·
+          5 │ + const·ai·=·new·GoogleGenAI({
+      6   6 │   	apiKey: process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY,
+      7     │ - → ...(process.env.GEMINI_BASE_URL·&&·{·httpOptions:·{·baseUrl:·process.env.GEMINI_BASE_URL·}·})
+          7 │ + → ...(process.env.GEMINI_BASE_URL·&&·{
+          8 │ + → → httpOptions:·{·baseUrl:·process.env.GEMINI_BASE_URL·},
+          9 │ + → }),
+      8  10 │   });
+      9  11 │   
+  
+
+./src/components/ask-panel.tsx:90:14 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid using the index of an array as key property in an element.
+  
+    88 │ 						{SUGGESTIONS.map((sug, i) => (
+    89 │ 							<Button
+  > 90 │ 								key={i}
+       │ 								     ^
+    91 │ 								variant='secondary'
+    92 │ 								size='sm'
+  
+  i This is the source of the key value.
+  
+    86 │ 				{!result && !loading && (
+    87 │ 					<div className='flex flex-wrap gap-2 mb-4 shrink-0'>
+  > 88 │ 						{SUGGESTIONS.map((sug, i) => (
+       │ 						                       ^
+    89 │ 							<Button
+    90 │ 								key={i}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+./src/components/ask-panel.tsx:125:19 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid using the index of an array as key property in an element.
+  
+    123 │ 											{result.citations.map((cite, i) => (
+    124 │ 												<li
+  > 125 │ 													key={i}
+        │ 													     ^
+    126 │ 													className='text-xs font-mono text-muted-foreground bg-background px-2 py-1 inline-block rounded border shadow-sm mr-2 mb-1'
+    127 │ 												>
+  
+  i This is the source of the key value.
+  
+    121 │ 										</h5>
+    122 │ 										<ul className='space-y-1'>
+  > 123 │ 											{result.citations.map((cite, i) => (
+        │ 											                             ^
+    124 │ 												<li
+    125 │ 													key={i}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+./src/components/ask-panel.tsx:158:18 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid using the index of an array as key property in an element.
+  
+    156 │ 										{result.followUps.map((fu, i) => (
+    157 │ 											<Button
+  > 158 │ 												key={i}
+        │ 												     ^
+    159 │ 												variant='outline'
+    160 │ 												size='sm'
+  
+  i This is the source of the key value.
+  
+    154 │ 									</p>
+    155 │ 									<div className='flex flex-col gap-2'>
+  > 156 │ 										{result.followUps.map((fu, i) => (
+        │ 										                           ^
+    157 │ 											<Button
+    158 │ 												key={i}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+./src/components/compare-panel.tsx:128:17 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid using the index of an array as key property in an element.
+  
+    126 │ 									{result.changes.map((change, i) => (
+    127 │ 										<div
+  > 128 │ 											key={i}
+        │ 											     ^
+    129 │ 											className='p-6 hover:bg-muted/10 transition-colors'
+    130 │ 										>
+  
+  i This is the source of the key value.
+  
+    124 │ 							<ScrollArea className='max-h-[600px]'>
+    125 │ 								<div className='divide-y'>
+  > 126 │ 									{result.changes.map((change, i) => (
+        │ 									                             ^
+    127 │ 										<div
+    128 │ 											key={i}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+./src/components/analysis-dashboard.tsx:117:14 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid using the index of an array as key property in an element.
+  
+    115 │ 						{result.risks.map((risk, i) => (
+    116 │ 							<Card
+  > 117 │ 								key={i}
+        │ 								     ^
+    118 │ 								className={`border-l-4 shadow-sm ${
+    119 │ 									risk.severity === 'high'
+  
+  i This is the source of the key value.
+  
+    113 │ 					</h3>
+    114 │ 					<div className='grid gap-3'>
+  > 115 │ 						{result.risks.map((risk, i) => (
+        │ 						                         ^
+    116 │ 							<Card
+    117 │ 								key={i}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+./src/components/analysis-dashboard.tsx:167:14 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid using the index of an array as key property in an element.
+  
+    165 │ 						{result.keyClauses.map((clause, i) => (
+    166 │ 							<AccordionItem
+  > 167 │ 								key={i}
+        │ 								     ^
+    168 │ 								value={`clause-${i}`}
+    169 │ 								className='border rounded-lg bg-card px-4 shadow-sm'
+  
+  i This is the source of the key value.
+  
+    163 │ 					<h3 className='text-lg font-semibold'>Key Clauses</h3>
+    164 │ 					<Accordion className='w-full space-y-2'>
+  > 165 │ 						{result.keyClauses.map((clause, i) => (
+        │ 						                                ^
+    166 │ 							<AccordionItem
+    167 │ 								key={i}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+./src/components/analysis-dashboard.tsx:209:15 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid using the index of an array as key property in an element.
+  
+    207 │ 							{result.obligations.map((obs, i) => (
+    208 │ 								<div
+  > 209 │ 									key={i}
+        │ 									     ^
+    210 │ 									className='grid grid-cols-12 gap-2 p-3 hover:bg-muted/20 transition-colors'
+    211 │ 								>
+  
+  i This is the source of the key value.
+  
+    205 │ 						</div>
+    206 │ 						<div className='divide-y text-sm'>
+  > 207 │ 							{result.obligations.map((obs, i) => (
+        │ 							                              ^
+    208 │ 								<div
+    209 │ 									key={i}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+./src/components/settings-dialog.tsx format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+     81  81 │   								<SelectValue placeholder='Select AI model' />
+     82  82 │   							</SelectTrigger>
+     83     │ - → → → → → → → <SelectContent·className="w-fit">
+         83 │ + → → → → → → → <SelectContent·className='w-fit'>
+     84  84 │   								<SelectItem value='gemini-1.5-pro'>
+     85  85 │   									Google Gemini 1.5 Pro
+  
+
+./src/components/checklist-panel.tsx:48:14 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid using the index of an array as key property in an element.
+  
+    46 │ 						{checklist.map((item, i) => (
+    47 │ 							<div
+  > 48 │ 								key={i}
+       │ 								     ^
+    49 │ 								className='flex items-start space-x-3 p-2 rounded-md hover:bg-muted/50 transition-colors'
+    50 │ 							>
+  
+  i This is the source of the key value.
+  
+    44 │ 				{checklist && checklist.length > 0 ? (
+    45 │ 					<div className='space-y-3'>
+  > 46 │ 						{checklist.map((item, i) => (
+       │ 						                      ^
+    47 │ 							<div
+    48 │ 								key={i}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+./src/components/checklist-panel.tsx:95:16 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Avoid using the index of an array as key property in an element.
+  
+    93 │ 								{questions.map((q, i) => (
+    94 │ 									<div
+  > 95 │ 										key={i}
+       │ 										     ^
+    96 │ 										className='flex gap-3 items-start bg-muted/40 p-3 rounded-lg border border-border/50'
+    97 │ 									>
+  
+  i This is the source of the key value.
+  
+    91 │ 							</DialogHeader>
+    92 │ 							<div className='space-y-4 py-4'>
+  > 93 │ 								{questions.map((q, i) => (
+       │ 								                   ^
+    94 │ 									<div
+    95 │ 										key={i}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+Checked 52 files in 8ms. No fixes applied.
+Found 4 errors.
+Found 9 warnings.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+
