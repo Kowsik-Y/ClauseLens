@@ -95,7 +95,7 @@ export default function AnalyzePage() {
 			</div>
 
 			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-				<DialogContent className='sm:max-w-2xl p-0 border-none bg-transparent shadow-none overflow-hidden'>
+				<DialogContent className='sm:max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto p-0 border-none bg-transparent shadow-none rounded-xl'>
 					<DialogHeader className='sr-only'>
 						<DialogTitle>Document Input</DialogTitle>
 						<DialogDescription>
@@ -110,7 +110,7 @@ export default function AnalyzePage() {
 
 			<div className='w-full'>
 				{analyzing ? (
-					<div className='flex flex-col items-center justify-center h-125 border rounded-lg bg-card text-muted-foreground w-full'>
+					<div className='flex flex-col items-center justify-center min-h-[300px] md:h-125 border rounded-lg bg-card text-muted-foreground w-full p-6'>
 						<Loader2 className='w-12 h-12 animate-spin mb-4 text-primary' />
 						<p className='text-lg font-medium'>Analyzing document with AI...</p>
 						<p className='text-sm mt-2 max-w-100 text-center'>
@@ -123,7 +123,7 @@ export default function AnalyzePage() {
 						<AnalysisDashboard result={result} documentText={documentText} />
 					</div>
 				) : (
-					<div className='flex flex-col items-center justify-center py-32 border rounded-xl border-dashed bg-muted/30 text-muted-foreground w-full text-center px-4'>
+					<div className='flex flex-col items-center justify-center py-16 md:py-32 border rounded-xl border-dashed bg-muted/30 text-muted-foreground w-full text-center px-4'>
 						<div className='w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6'>
 							<FileUp className='w-8 h-8 text-primary' />
 						</div>

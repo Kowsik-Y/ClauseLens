@@ -14,16 +14,16 @@ export function Header() {
 			<div className='container mx-auto flex h-16 items-center px-4 md:px-8'>
 				<Link
 					href='/'
-					className='mr-4 flex items-center space-x-2 transition-opacity hover:opacity-80'
+					className='mr-2 md:mr-4 flex items-center space-x-1 md:space-x-2 transition-opacity hover:opacity-80'
 				>
-					<Scale className='h-6 w-6 text-primary' />
-					<span className='font-bold  text-lg'>ClauseLens</span>
-					<span className='hidden text-sm text-muted-foreground sm:inline-block ml-2 border-l border-border pl-2'>
+					<Scale className='h-5 w-5 md:h-6 md:w-6 text-primary' />
+					<span className='font-bold text-base md:text-lg'>ClauseLens</span>
+					<span className='hidden text-sm text-muted-foreground lg:inline-block ml-2 border-l border-border pl-2'>
 						AI Legal Document
 					</span>
 				</Link>
 
-				<nav className='flex items-center space-x-6 text-sm font-medium mr-auto ml-6'>
+				<nav className='flex items-center space-x-3 md:space-x-6 text-sm font-medium mr-auto ml-2 md:ml-6'>
 					<Link
 						href='/analyze'
 						className={`transition-colors hover:text-primary ${pathname === '/analyze' ? 'text-primary' : 'text-muted-foreground'}`}

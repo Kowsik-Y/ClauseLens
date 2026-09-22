@@ -204,33 +204,35 @@ export function AnalysisDashboard({
 			{result.obligations && result.obligations.length > 0 && (
 				<div className='space-y-3'>
 					<h3 className='text-lg font-semibold'>Obligations</h3>
-					<div className='rounded-md border bg-card overflow-hidden'>
-						<div className='grid grid-cols-12 gap-2 p-3 font-semibold text-xs text-muted-foreground uppercase  bg-muted/40 border-b'>
-							<div className='col-span-3'>Party</div>
-							<div className='col-span-5'>Obligation</div>
-							<div className='col-span-3'>Trigger / Deadline</div>
-							<div className='col-span-1 text-right'>Ref</div>
-						</div>
-						<div className='divide-y text-sm'>
-							{result.obligations.map((obs) => (
-								<div
-									key={`${obs.party}-${obs.obligation}`}
-									className='grid grid-cols-12 gap-2 p-3 hover:bg-muted/20 transition-colors'
-								>
-									<div className='col-span-3 font-medium text-foreground/90'>
-										{obs.party}
+					<div className='rounded-md border bg-card overflow-x-auto'>
+						<div className='min-w-[600px]'>
+							<div className='grid grid-cols-12 gap-2 p-3 font-semibold text-xs text-muted-foreground uppercase  bg-muted/40 border-b'>
+								<div className='col-span-3'>Party</div>
+								<div className='col-span-5'>Obligation</div>
+								<div className='col-span-3'>Trigger / Deadline</div>
+								<div className='col-span-1 text-right'>Ref</div>
+							</div>
+							<div className='divide-y text-sm'>
+								{result.obligations.map((obs) => (
+									<div
+										key={`${obs.party}-${obs.obligation}`}
+										className='grid grid-cols-12 gap-2 p-3 hover:bg-muted/20 transition-colors'
+									>
+										<div className='col-span-3 font-medium text-foreground/90'>
+											{obs.party}
+										</div>
+										<div className='col-span-5 text-muted-foreground'>
+											{obs.obligation}
+										</div>
+										<div className='col-span-3 text-muted-foreground'>
+											{obs.trigger}
+										</div>
+										<div className='col-span-1 text-right text-xs text-muted-foreground font-mono'>
+											{obs.page}
+										</div>
 									</div>
-									<div className='col-span-5 text-muted-foreground'>
-										{obs.obligation}
-									</div>
-									<div className='col-span-3 text-muted-foreground'>
-										{obs.trigger}
-									</div>
-									<div className='col-span-1 text-right text-xs text-muted-foreground font-mono'>
-										{obs.page}
-									</div>
-								</div>
-							))}
+								))}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -246,9 +248,9 @@ export function AnalysisDashboard({
 			</div>
 
 			{/* Floating Chat Widget */}
-			<div className='fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4'>
+			<div className='fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-4'>
 				{isChatOpen && (
-					<div className='w-[400px] h-[550px] shadow-2xl rounded-xl overflow-hidden bg-background animate-in slide-in-from-bottom-5 duration-200'>
+					<div className='w-[calc(100vw-2rem)] sm:w-[400px] h-[60vh] sm:h-[550px] shadow-2xl rounded-xl overflow-hidden bg-background animate-in slide-in-from-bottom-5 duration-200'>
 						<AskPanel documentText={documentText} />
 					</div>
 				)}

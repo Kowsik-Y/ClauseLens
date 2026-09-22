@@ -107,7 +107,7 @@ export function ComparePanel() {
 			)}
 
 			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-				<DialogContent className='sm:max-w-4xl md:max-w-5xl'>
+				<DialogContent className='sm:max-w-4xl md:max-w-5xl w-[95vw] max-h-[90vh] overflow-y-auto'>
 					<DialogHeader>
 						<DialogTitle>Document Input</DialogTitle>
 						<DialogDescription>
@@ -225,7 +225,7 @@ export function ComparePanel() {
 			)}
 
 			{loading ? (
-				<div className='flex flex-col items-center justify-center h-125 border rounded-lg bg-card text-muted-foreground w-full'>
+				<div className='flex flex-col items-center justify-center min-h-[300px] md:h-125 border rounded-lg bg-card text-muted-foreground w-full p-6'>
 					<Loader2 className='w-12 h-12 animate-spin mb-4 text-primary' />
 					<p className='text-lg font-medium'>Analyzing differences...</p>
 					<p className='text-sm mt-2 max-w-100 text-center'>
@@ -313,7 +313,7 @@ export function ComparePanel() {
 					</CardContent>
 				</Card>
 			) : (
-				<div className='flex flex-col items-center justify-center py-32 border rounded-xl border-dashed bg-muted/30 text-muted-foreground w-full text-center px-4'>
+				<div className='flex flex-col items-center justify-center py-16 md:py-32 border rounded-xl border-dashed bg-muted/30 text-muted-foreground w-full text-center px-4'>
 					<div className='w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6'>
 						<GitCompare className='w-8 h-8 text-primary' />
 					</div>
