@@ -30,7 +30,7 @@ Follow these rules strictly:
 User Question: ${question}
 
 Document text:
-${documentText.substring(0, 80000)}
+${documentText}
 `;
 
 		const response = await ai.models.generateContent({

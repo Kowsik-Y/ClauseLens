@@ -30,7 +30,7 @@ export function ChecklistPanel({
 	};
 
 	return (
-		<Card className='h-full border-border/60 shadow-sm flex flex-col'>
+		<Card className='h-full border-border/60  flex flex-col'>
 			<CardHeader className='pb-3 shrink-0'>
 				<CardTitle className='text-xl flex items-center gap-2'>
 					<ListTodo className='w-5 h-5 text-primary' />

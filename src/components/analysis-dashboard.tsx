@@ -1,3 +1,5 @@
+'use client';
+
 import {
 	Accordion,
 	AccordionContent,
@@ -5,6 +7,7 @@ import {
 	AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
 	Card,
 	CardContent,
@@ -20,7 +23,10 @@ import {
 	CheckCircle2,
 	FileText,
 	Info,
+	MessageSquare,
+	XIcon,
 } from 'lucide-react';
+import { useState } from 'react';
 import { AskPanel } from './ask-panel';
 import { ChecklistPanel } from './checklist-panel';
 
@@ -54,10 +60,12 @@ export function AnalysisDashboard({
 	result,
 	documentText,
 }: { result: AnalysisResult; documentText: string }) {
+	const [isChatOpen, setIsChatOpen] = useState(false);
+
 	return (
-		<div className='space-y-6'>
+		<div className='space-y-6 relative'>
 			{/* Executive Summary */}
-			<Card className='border-border/60 shadow-sm'>
+			<Card className='border-border/60'>
 				<CardHeader className='pb-3'>
 					<CardTitle className='text-2xl flex items-center gap-2'>
 						<FileText className='w-5 h-5 text-primary' />
@@ -115,7 +123,7 @@ export function AnalysisDashboard({
 						{result.risks.map((risk) => (
 							<Card
 								key={risk.title}
-								className={`border-l-4 shadow-sm ${
+								className={`border-l-4  ${
 									risk.severity === 'high'
 										? 'border-l-destructive bg-destructive/5'
 										: risk.severity === 'medium'
@@ -166,7 +174,7 @@ export function AnalysisDashboard({
 							<AccordionItem
 								key={clause.title}
 								value={`clause-${i}`}
-								className='border rounded-lg bg-card px-4 shadow-sm'
+								className='border rounded-lg bg-card px-4 '
 							>
 								<AccordionTrigger className='hover:no-underline py-3'>
 									<div className='flex justify-between w-full pr-4 text-left'>
@@ -206,7 +214,7 @@ export function AnalysisDashboard({
 						<div className='divide-y text-sm'>
 							{result.obligations.map((obs) => (
 								<div
-									key={obs.obligation}
+									key={`${obs.party}-${obs.obligation}`}
 									className='grid grid-cols-12 gap-2 p-3 hover:bg-muted/20 transition-colors'
 								>
 									<div className='col-span-3 font-medium text-foreground/90'>
@@ -230,12 +238,31 @@ export function AnalysisDashboard({
 
 			<Separator />
 
-			<div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-				<AskPanel documentText={documentText} />
+			<div className='w-full'>
 				<ChecklistPanel
 					checklist={result.checklist}
 					questions={result.questionsForCounsel}
 				/>
+			</div>
+
+			{/* Floating Chat Widget */}
+			<div className='fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4'>
+				{isChatOpen && (
+					<div className='w-[400px] h-[550px] shadow-2xl rounded-xl overflow-hidden bg-background animate-in slide-in-from-bottom-5 duration-200'>
+						<AskPanel documentText={documentText} />
+					</div>
+				)}
+				<Button
+					size='icon'
+					className='w-14 h-14 rounded-full shadow-xl hover:scale-105 transition-transform'
+					onClick={() => setIsChatOpen(!isChatOpen)}
+				>
+					{isChatOpen ? (
+						<XIcon className='w-6 h-6' />
+					) : (
+						<MessageSquare className='w-6 h-6' />
+					)}
+				</Button>
 			</div>
 		</div>
 	);

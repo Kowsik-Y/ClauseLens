@@ -2,8 +2,16 @@
 
 import { AnalysisDashboard } from '@/components/analysis-dashboard';
 import { DocumentInput } from '@/components/document-input';
+import { Button } from '@/components/ui/button';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+} from '@/components/ui/dialog';
 import type { AnalysisResult } from '@/lib/types';
-import { Loader2 } from 'lucide-react';
+import { FileUp, Loader2, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -11,12 +19,14 @@ export default function AnalyzePage() {
 	const [analyzing, setAnalyzing] = useState(false);
 	const [result, setResult] = useState<AnalysisResult | null>(null);
 	const [documentText, setDocumentText] = useState('');
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
 	const handleAnalyze = async ({
 		text,
 		file,
 		mode,
 	}: { text: string; file?: File; mode: string }) => {
+		setIsDialogOpen(false); // Close dialog immediately when analysis starts
 		setAnalyzing(true);
 		setResult(null);
 		setDocumentText('');
@@ -65,37 +75,75 @@ export default function AnalyzePage() {
 	};
 
 	return (
-		<div className='container mx-auto px-4 py-8 md:px-8 space-y-8'>
-			<div className='grid grid-cols-1 xl:grid-cols-12 gap-8'>
-				<div className='xl:col-span-4'>
-					<DocumentInput onAnalyze={handleAnalyze} />
+		<div className='container mx-auto px-4 py-8 md:px-8 space-y-8 max-w-7xl'>
+			<div className='flex justify-between items-center mb-6'>
+				<div>
+					<h1 className='text-3xl font-bold tracking-tight'>
+						Document Analysis
+					</h1>
+					<p className='text-muted-foreground mt-1'>
+						Upload or paste a legal document to instantly extract clauses,
+						risks, and obligations.
+					</p>
 				</div>
+				{result && !analyzing && (
+					<Button onClick={() => setIsDialogOpen(true)} className='gap-2'>
+						<Plus className='w-4 h-4' />
+						Analyze New Document
+					</Button>
+				)}
+			</div>
 
-				<div className='xl:col-span-8'>
-					{analyzing ? (
-						<div className='flex flex-col items-center justify-center h-125 border rounded-lg bg-card text-muted-foreground'>
-							<Loader2 className='w-12 h-12 animate-spin mb-4 text-primary' />
-							<p className='text-lg font-medium'>
-								Analyzing document with AI...
-							</p>
-							<p className='text-sm mt-2 max-w-100 text-center'>
-								This usually takes 10-20 seconds depending on the document
-								length and complexity.
-							</p>
-						</div>
-					) : result ? (
+			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+				<DialogContent className='sm:max-w-2xl p-0 border-none bg-transparent shadow-none overflow-hidden'>
+					<DialogHeader className='sr-only'>
+						<DialogTitle>Document Input</DialogTitle>
+						<DialogDescription>
+							Upload a document for analysis
+						</DialogDescription>
+					</DialogHeader>
+					<div className='bg-card rounded-xl'>
+						<DocumentInput onAnalyze={handleAnalyze} />
+					</div>
+				</DialogContent>
+			</Dialog>
+
+			<div className='w-full'>
+				{analyzing ? (
+					<div className='flex flex-col items-center justify-center h-125 border rounded-lg bg-card text-muted-foreground w-full'>
+						<Loader2 className='w-12 h-12 animate-spin mb-4 text-primary' />
+						<p className='text-lg font-medium'>Analyzing document with AI...</p>
+						<p className='text-sm mt-2 max-w-100 text-center'>
+							This usually takes 10-20 seconds depending on the document length
+							and complexity.
+						</p>
+					</div>
+				) : result ? (
+					<div className='w-full'>
 						<AnalysisDashboard result={result} documentText={documentText} />
-					) : (
-						<div className='flex flex-col items-center justify-center h-125 border rounded-lg border-dashed bg-muted/20 text-muted-foreground'>
-							<p className='text-xl font-medium mb-2 text-foreground/70'>
-								Your document intelligence will appear here
-							</p>
-							<p className='text-sm'>
-								Upload or paste a document to begin analysis.
-							</p>
+					</div>
+				) : (
+					<div className='flex flex-col items-center justify-center py-32 border rounded-xl border-dashed bg-muted/30 text-muted-foreground w-full text-center px-4'>
+						<div className='w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6'>
+							<FileUp className='w-8 h-8 text-primary' />
 						</div>
-					)}
-				</div>
+						<h2 className='text-2xl font-semibold mb-3 text-foreground/90'>
+							No Document Analyzed Yet
+						</h2>
+						<p className='text-base max-w-md mb-8'>
+							Upload a PDF, DOCX, or paste raw text to instantly generate an
+							executive summary, extract key clauses, and identify hidden risks.
+						</p>
+						<Button
+							size='lg'
+							onClick={() => setIsDialogOpen(true)}
+							className='gap-2 text-base px-8 h-12'
+						>
+							<Plus className='w-5 h-5' />
+							Start New Analysis
+						</Button>
+					</div>
+				)}
 			</div>
 		</div>
 	);

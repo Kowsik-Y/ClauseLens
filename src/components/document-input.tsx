@@ -45,7 +45,7 @@ export function DocumentInput({
 	};
 
 	return (
-		<Card className='w-full shadow-sm border-border/60'>
+		<Card className='w-full  border-border/60'>
 			<CardHeader>
 				<CardTitle className='text-xl'>Document Input</CardTitle>
 				<CardDescription>
@@ -124,7 +124,7 @@ export function DocumentInput({
 							<Textarea
 								id='document-text'
 								placeholder='Paste your legal document text here...'
-								className='min-h-62.5 resize-y font-mono text-sm'
+								className='min-h-62.5 max-h-100 resize-y font-mono text-sm'
 								value={text}
 								onChange={(e) => setText(e.target.value)}
 							/>

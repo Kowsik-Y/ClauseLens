@@ -29,10 +29,10 @@ Rules:
 4. Ignore minor formatting or trivial word changes that don't affect legal meaning.
 
 Document A (Original):
-${documentA.substring(0, 40000)}
+${documentA}
 
 Document B (New):
-${documentB.substring(0, 40000)}
+${documentB}
 `;
 
 		const response = await ai.models.generateContent({

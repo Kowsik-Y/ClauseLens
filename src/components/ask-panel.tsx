@@ -52,7 +52,7 @@ export function AskPanel({ documentText }: { documentText: string }) {
 	};
 
 	return (
-		<Card className='h-full border-border/60 shadow-sm flex flex-col'>
+		<Card className='h-full border-border/60  flex flex-col'>
 			<CardHeader className='pb-3 shrink-0'>
 				<CardTitle className='text-xl flex items-center gap-2'>
 					<MessageSquare className='w-5 h-5 text-primary' />
@@ -99,7 +99,7 @@ export function AskPanel({ documentText }: { documentText: string }) {
 					</div>
 				)}
 
-				<ScrollArea className='flex-1 -mx-2 px-2'>
+				<ScrollArea className='flex-1 min-h-0 pr-4'>
 					{error && (
 						<div className='p-3 bg-destructive/10 text-destructive rounded-md text-sm mb-4'>
 							{error}
@@ -112,7 +112,9 @@ export function AskPanel({ documentText }: { documentText: string }) {
 								<h4 className='font-medium text-sm mb-2 text-foreground/80'>
 									Answer
 								</h4>
-								<p className='text-sm '>{result.answer}</p>
+								<p className='text-sm whitespace-pre-wrap break-words leading-relaxed'>
+									{result.answer}
+								</p>
 
 								{result.citations && result.citations.length > 0 && (
 									<div className='mt-4 pt-3 border-t border-border/50'>
@@ -123,7 +125,7 @@ export function AskPanel({ documentText }: { documentText: string }) {
 											{result.citations.map((cite) => (
 												<li
 													key={cite}
-													className='text-xs font-mono text-muted-foreground bg-background px-2 py-1 inline-block rounded border shadow-sm mr-2 mb-1'
+													className='text-xs font-mono text-muted-foreground bg-background px-2 py-1 inline-block rounded border  mr-2 mb-1'
 												>
 													{cite}
 												</li>
@@ -158,7 +160,7 @@ export function AskPanel({ documentText }: { documentText: string }) {
 												key={fu}
 												variant='outline'
 												size='sm'
-												className='justify-start text-left h-auto py-2 px-3 text-xs'
+												className='justify-start text-left h-auto py-2 px-3 text-xs whitespace-normal break-words'
 												onClick={() => handleAsk(fu)}
 											>
 												{fu}

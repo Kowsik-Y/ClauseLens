@@ -30,7 +30,7 @@ Follow these rules strictly:
 6. The mode of analysis is: ${mode}
 
 Document text:
-${documentText.substring(0, 80000)} // Ensure we don't exceed token limits for this MVP
+${documentText}
 `;
 
 		const response = await ai.models.generateContent({
