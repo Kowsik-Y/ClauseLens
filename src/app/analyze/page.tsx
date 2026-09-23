@@ -1,7 +1,5 @@
 'use client';
 
-import { AnalysisDashboard } from '@/components/analysis-dashboard';
-import { DocumentInput } from '@/components/document-input';
 import { Button } from '@/components/ui/button';
 import {
 	Dialog,
@@ -12,8 +10,32 @@ import {
 } from '@/components/ui/dialog';
 import type { AnalysisResult } from '@/lib/types';
 import { FileUp, Loader2, Plus } from 'lucide-react';
-import { useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
+
+const AnalysisDashboard = dynamic(
+	() =>
+		import('@/components/analysis-dashboard').then((m) => m.AnalysisDashboard),
+	{
+		loading: () => (
+			<div className='flex justify-center p-8'>
+				<Loader2 className='w-8 h-8 animate-spin text-primary' />
+			</div>
+		),
+	},
+);
+
+const DocumentInput = dynamic(
+	() => import('@/components/document-input').then((m) => m.DocumentInput),
+	{
+		loading: () => (
+			<div className='flex justify-center p-8'>
+				<Loader2 className='w-8 h-8 animate-spin text-primary' />
+			</div>
+		),
+	},
+);
 
 export default function AnalyzePage() {
 	const [analyzing, setAnalyzing] = useState(false);
@@ -21,58 +43,61 @@ export default function AnalyzePage() {
 	const [documentText, setDocumentText] = useState('');
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-	const handleAnalyze = async ({
-		text,
-		file,
-		mode,
-	}: { text: string; file?: File; mode: string }) => {
-		setIsDialogOpen(false); // Close dialog immediately when analysis starts
-		setAnalyzing(true);
-		setResult(null);
-		setDocumentText('');
+	const handleAnalyze = useCallback(
+		async ({
+			text,
+			file,
+			mode,
+		}: { text: string; file?: File; mode: string }) => {
+			setIsDialogOpen(false); // Close dialog immediately when analysis starts
+			setAnalyzing(true);
+			setResult(null);
+			setDocumentText('');
 
-		try {
-			let finalDocText = text;
+			try {
+				let finalDocText = text;
 
-			if (file) {
-				const formData = new FormData();
-				formData.append('file', file);
-				const extractRes = await fetch('/api/parse', {
+				if (file) {
+					const formData = new FormData();
+					formData.append('file', file);
+					const extractRes = await fetch('/api/parse', {
+						method: 'POST',
+						body: formData,
+					});
+
+					if (!extractRes.ok) {
+						throw new Error('Failed to extract text from file.');
+					}
+					const { text: extractedText } = await extractRes.json();
+					finalDocText = extractedText;
+				}
+
+				setDocumentText(finalDocText);
+
+				const analyzeRes = await fetch('/api/analyze', {
 					method: 'POST',
-					body: formData,
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ documentText: finalDocText, mode }),
 				});
 
-				if (!extractRes.ok) {
-					throw new Error('Failed to extract text from file.');
+				if (!analyzeRes.ok) {
+					throw new Error('Failed to analyze document.');
 				}
-				const { text: extractedText } = await extractRes.json();
-				finalDocText = extractedText;
+
+				const data = await analyzeRes.json();
+				setResult(data);
+				toast.success('Analysis complete!');
+			} catch (error: unknown) {
+				toast.error(
+					(error as Error).message || 'An error occurred during analysis.',
+				);
+				console.error(error);
+			} finally {
+				setAnalyzing(false);
 			}
-
-			setDocumentText(finalDocText);
-
-			const analyzeRes = await fetch('/api/analyze', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ documentText: finalDocText, mode }),
-			});
-
-			if (!analyzeRes.ok) {
-				throw new Error('Failed to analyze document.');
-			}
-
-			const data = await analyzeRes.json();
-			setResult(data);
-			toast.success('Analysis complete!');
-		} catch (error: unknown) {
-			toast.error(
-				(error as Error).message || 'An error occurred during analysis.',
-			);
-			console.error(error);
-		} finally {
-			setAnalyzing(false);
-		}
-	};
+		},
+		[],
+	);
 
 	return (
 		<div className='container mx-auto px-4 py-8 md:px-8 space-y-8 max-w-7xl'>

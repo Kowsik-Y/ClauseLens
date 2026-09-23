@@ -27,7 +27,7 @@ import {
 	Plus,
 	UploadCloud,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
 export function ComparePanel() {
@@ -40,7 +40,7 @@ export function ComparePanel() {
 	const [uploadingA, setUploadingA] = useState(false);
 	const [uploadingB, setUploadingB] = useState(false);
 
-	const handleFileUpload = async (file: File, isDocA: boolean) => {
+	const handleFileUpload = useCallback(async (file: File, isDocA: boolean) => {
 		if (isDocA) setUploadingA(true);
 		else setUploadingB(true);
 
@@ -65,9 +65,9 @@ export function ComparePanel() {
 			if (isDocA) setUploadingA(false);
 			else setUploadingB(false);
 		}
-	};
+	}, []);
 
-	const handleCompare = async () => {
+	const handleCompare = useCallback(async () => {
 		if (!docA.trim() || !docB.trim()) return;
 
 		setIsDialogOpen(false);
@@ -92,7 +92,7 @@ export function ComparePanel() {
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, [docA, docB]);
 
 	return (
 		<div className='space-y-6 w-full'>

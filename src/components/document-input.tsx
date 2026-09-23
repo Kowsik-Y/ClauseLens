@@ -20,7 +20,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { FileText, UploadCloud, X } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 export function DocumentInput({
 	onAnalyze,
@@ -29,6 +29,7 @@ export function DocumentInput({
 	const [text, setText] = useState('');
 	const [mode, setMode] = useState('Full Analysis');
 	const [isDragging, setIsDragging] = useState(false);
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files?.[0]) {
@@ -60,14 +61,25 @@ export function DocumentInput({
 					</TabsList>
 
 					<TabsContent value='upload'>
+						{/* biome-ignore lint/a11y/useSemanticElements: Drag drop area needs to be a div */}
 						<div
-							className={`flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg transition-colors ${isDragging ? 'border-primary bg-primary/5' : 'border-border/60 hover:bg-muted/30'}`}
+							role='button'
+							tabIndex={0}
+							aria-label='File upload drop zone'
+							className={`flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isDragging ? 'border-primary bg-primary/5' : 'border-border/60 hover:bg-muted/30'}`}
 							onDragOver={(e) => {
 								e.preventDefault();
 								setIsDragging(true);
 							}}
 							onDragLeave={() => setIsDragging(false)}
 							onDrop={handleDrop}
+							onClick={() => fileInputRef.current?.click()}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter' || e.key === ' ') {
+									e.preventDefault();
+									fileInputRef.current?.click();
+								}
+							}}
 						>
 							{file ? (
 								<div className='flex flex-col items-center gap-2'>
@@ -83,7 +95,11 @@ export function DocumentInput({
 									<Button
 										variant='ghost'
 										size='sm'
-										onClick={() => setFile(null)}
+										aria-label='Remove uploaded file'
+										onClick={(e) => {
+											e.stopPropagation();
+											setFile(null);
+										}}
 										className='mt-2 text-destructive hover:text-destructive/90'
 									>
 										<X className='w-4 h-4 mr-1' /> Remove
@@ -105,10 +121,13 @@ export function DocumentInput({
 											Select File
 										</Button>
 										<input
+											ref={fileInputRef}
 											type='file'
-											className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
+											aria-label='Select file to upload'
+											className='hidden'
 											accept='.pdf,.docx,.txt'
 											onChange={handleFileChange}
+											tabIndex={-1}
 										/>
 									</div>
 								</div>

@@ -4,11 +4,15 @@ ClauseLens is a GenAI-powered legal information assistant that helps users under
 
 This project was built for the PromptWars: Virtual (Exclusive Edition) challenge.
 
+## Chosen Vertical
+
+Legal Tech / Document Understanding
+
 ## Problem Statement
 
 Legal documents (contracts, NDAs, terms of service) are notoriously dense and difficult for the average person to understand. Individuals and small businesses often sign agreements without fully comprehending the hidden risks, implicit obligations, or complex clauses buried in the fine print. Retaining a lawyer for every minor contract is prohibitively expensive and time-consuming, leaving a massive gap in legal accessibility. ClauseLens solves this by leveraging GenAI to instantly translate legalese into actionable, plain-English insights, empowering users to make informed decisions and better prepare for professional legal counsel.
 
-## Key Features
+## How the Solution Works
 
 - **Document Analysis**: Upload a PDF/DOCX or paste text to generate a structured, plain-English executive summary.
 - **Clause Extraction**: Automatically identifies and categorizes key clauses with direct source citations.
@@ -25,6 +29,14 @@ For more in-depth information about the project, refer to the following document
 
 - [Local Setup & Configuration](docs/SETUP.md)
 - [Architecture & Tech Stack](docs/ARCHITECTURE.md)
+
+## Approach and Logic
+
+ClauseLens relies on a multi-modal approach:
+1. **Extraction**: Uploaded documents (PDFs, DOCX) are parsed entirely on the server using edge-friendly libraries (`pdf-parse`, `mammoth`).
+2. **Generative AI Analysis**: The raw text is passed to Google's Gemini models with a strict JSON schema prompt to extract structural components (summary, clauses, risks, obligations).
+3. **Structured Rendering**: The React frontend maps this structured JSON into an intuitive, user-friendly dashboard, categorizing risks by severity and clauses by relevance.
+4. **Agentic Q&A**: Users can ask contextual questions, which are resolved by grounding the prompt entirely in the uploaded document text.
 
 ## Project Architecture
 
@@ -89,7 +101,7 @@ ClauseLens is designed with privacy and security as a priority:
 - **Data Retention**: Since no data is persisted to a database, your document analysis remains entirely ephemeral.
 - **Input Validation**: Uploaded files are validated by type and length constraints before any AI processing begins.
 
-## Legal Disclaimer
+## Assumptions Made
 
 **ClauseLens provides legal information and document understanding, not legal advice.** 
 

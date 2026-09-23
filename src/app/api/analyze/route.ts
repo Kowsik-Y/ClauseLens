@@ -20,6 +20,13 @@ export async function POST(req: NextRequest) {
 			);
 		}
 
+		if (documentText.length > 100000) {
+			return NextResponse.json(
+				{ error: 'Document text exceeds the 100,000 character limit.' },
+				{ status: 413 },
+			);
+		}
+
 		const prompt = `You are a legal document copilot. Analyze the provided legal document based on the user's request.
 Follow these rules strictly:
 1. ONLY use information contained in the provided document.
@@ -114,21 +121,36 @@ ${documentText}
 						},
 						checklist: { type: Type.ARRAY, items: { type: Type.STRING } },
 					},
-					required: [
-						'summary',
-						'documentType',
-						'parties',
-						'keyClauses',
-						'risks',
-						'obligations',
-						'questionsForCounsel',
-						'checklist',
-					],
+					required: (() => {
+						switch (mode) {
+							case 'Simple Summary':
+								return ['summary', 'documentType'];
+							case 'Risk Review':
+								return ['summary', 'documentType', 'risks'];
+							case 'Obligations Extract':
+								return ['summary', 'documentType', 'parties', 'obligations'];
+							default:
+								return [
+									'summary',
+									'documentType',
+									'parties',
+									'keyClauses',
+									'risks',
+									'obligations',
+									'questionsForCounsel',
+									'checklist',
+								];
+						}
+					})(),
 				},
 			},
 		});
 
-		const data = JSON.parse(response.text || '{}');
+		const rawText = response.text || '{}';
+		const cleanText = rawText
+			.replace(/^```(json)?\s*/i, '')
+			.replace(/\s*```$/i, '');
+		const data = JSON.parse(cleanText);
 		return NextResponse.json(data);
 	} catch (error: unknown) {
 		console.error('AI Analysis Error:', error);

@@ -26,8 +26,16 @@ import {
 	MessageSquare,
 	XIcon,
 } from 'lucide-react';
-import { useState } from 'react';
-import { AskPanel } from './ask-panel';
+import dynamic from 'next/dynamic';
+import React, { useState } from 'react';
+
+const AskPanel = dynamic(() => import('./ask-panel').then((m) => m.AskPanel), {
+	loading: () => (
+		<div className='flex justify-center p-8'>
+			<div className='w-8 h-8 animate-spin rounded-full border-4 border-primary border-t-transparent' />
+		</div>
+	),
+});
 import { ChecklistPanel } from './checklist-panel';
 
 function getSeverityColor(severity: string) {
@@ -56,7 +64,7 @@ function getSeverityIcon(severity: string) {
 	}
 }
 
-export function AnalysisDashboard({
+export const AnalysisDashboard = React.memo(function AnalysisDashboard({
 	result,
 	documentText,
 }: { result: AnalysisResult; documentText: string }) {
@@ -256,6 +264,7 @@ export function AnalysisDashboard({
 				)}
 				<Button
 					size='icon'
+					aria-label='Toggle Chat'
 					className='w-14 h-14 rounded-full shadow-xl hover:scale-105 transition-transform'
 					onClick={() => setIsChatOpen(!isChatOpen)}
 				>
@@ -268,7 +277,7 @@ export function AnalysisDashboard({
 			</div>
 		</div>
 	);
-}
+});
 
 function ShieldAlertIcon(props: React.SVGProps<SVGSVGElement>) {
 	return (
