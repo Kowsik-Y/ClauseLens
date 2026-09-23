@@ -1,7 +1,8 @@
 /**
- * Validates if the given MIME type corresponds to an accepted file type (PDF or DOCX).
- * @param mimeType - The MIME type string of the file
- * @returns True if the file type is supported, false otherwise
+ * Validates whether the given MIME type is supported by the application.
+ * Only accepts PDF, DOCX, and TXT files.
+ * @param mimeType - The MIME type string of the file to check.
+ * @returns boolean - True if the file type is supported.
  */
 export function validateFileType(mimeType: string): boolean {
 	return (
@@ -29,6 +30,12 @@ export function validateFileSize(
  * Strips HTML tags, null bytes, and common injection patterns.
  * @param text - The raw input text
  * @returns The sanitized text
+ */
+/**
+ * Sanitizes input text to prevent XSS and injection attacks.
+ * Strips HTML tags, event handlers, JavaScript protocols, and null bytes.
+ * @param text - The raw, untrusted text input.
+ * @returns string - The cleaned and sanitized text.
  */
 export function sanitizeText(text: string): string {
 	return text

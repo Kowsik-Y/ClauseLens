@@ -6,6 +6,8 @@ import { Type } from '@google/genai';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
+export const runtime = 'edge';
+
 const AnalyzeRequestSchema = z.object({
 	documentText: z.string().min(1).max(100000),
 	mode: z.string().optional().default('Full Analysis'),

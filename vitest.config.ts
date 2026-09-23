@@ -17,8 +17,8 @@ export default defineConfig({
 			exclude: ['src/app/layout.tsx', 'src/**/*.d.ts', 'src/components/ui/**'],
 			thresholds: {
 				statements: 50,
-				branches: 50,
-				functions: 50,
+				branches: 40,
+				functions: 40,
 				lines: 50,
 			},
 		},

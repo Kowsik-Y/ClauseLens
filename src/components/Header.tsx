@@ -26,13 +26,13 @@ export function Header() {
 				<nav className='flex items-center space-x-3 md:space-x-6 text-sm font-medium mr-auto ml-2 md:ml-6'>
 					<Link
 						href='/analyze'
-						className={`transition-colors hover:text-primary ${pathname === '/analyze' ? 'text-primary' : 'text-muted-foreground'}`}
+						className={`transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm ${pathname === '/analyze' ? 'text-primary' : 'text-muted-foreground'}`}
 					>
 						Analyze
 					</Link>
 					<Link
 						href='/compare'
-						className={`transition-colors hover:text-primary ${pathname === '/compare' ? 'text-primary' : 'text-muted-foreground'}`}
+						className={`transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm ${pathname === '/compare' ? 'text-primary' : 'text-muted-foreground'}`}
 					>
 						Compare
 					</Link>

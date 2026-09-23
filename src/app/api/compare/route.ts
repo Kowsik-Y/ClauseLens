@@ -5,6 +5,8 @@ import { Type } from '@google/genai';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
+export const runtime = 'edge';
+
 const CompareRequestSchema = z.object({
 	documentA: z.string().min(1).max(100000),
 	documentB: z.string().min(1).max(100000),

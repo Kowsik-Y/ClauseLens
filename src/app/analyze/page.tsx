@@ -18,6 +18,7 @@ const AnalysisDashboard = dynamic(
 	() =>
 		import('@/components/analysis-dashboard').then((m) => m.AnalysisDashboard),
 	{
+		ssr: false,
 		loading: () => (
 			<div className='flex justify-center p-8'>
 				<Loader2 className='w-8 h-8 animate-spin text-primary' />
@@ -29,6 +30,7 @@ const AnalysisDashboard = dynamic(
 const DocumentInput = dynamic(
 	() => import('@/components/document-input').then((m) => m.DocumentInput),
 	{
+		ssr: false,
 		loading: () => (
 			<div className='flex justify-center p-8'>
 				<Loader2 className='w-8 h-8 animate-spin text-primary' />
