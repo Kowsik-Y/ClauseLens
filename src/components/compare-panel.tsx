@@ -153,8 +153,9 @@ export function ComparePanel() {
 							</CardHeader>
 							<CardContent>
 								<Textarea
+									aria-label='Original document text'
 									placeholder='Paste original text here...'
-									className='min-h-[300px] resize-y font-mono text-sm'
+									className='min-h-75 resize-y font-mono text-sm'
 									value={docA}
 									onChange={(e) => setDocA(e.target.value)}
 								/>
@@ -196,8 +197,9 @@ export function ComparePanel() {
 							</CardHeader>
 							<CardContent>
 								<Textarea
+									aria-label='New document text'
 									placeholder='Paste new text here...'
-									className='min-h-[300px] resize-y font-mono text-sm'
+									className='min-h-75 resize-y font-mono text-sm'
 									value={docB}
 									onChange={(e) => setDocB(e.target.value)}
 								/>
@@ -219,13 +221,19 @@ export function ComparePanel() {
 			</Dialog>
 
 			{error && (
-				<div className='p-4 bg-destructive/10 text-destructive rounded-lg text-center max-w-2xl mx-auto'>
+				<div
+					role='alert'
+					className='p-4 bg-destructive/10 text-destructive rounded-lg text-center max-w-2xl mx-auto'
+				>
 					{error}
 				</div>
 			)}
 
 			{loading ? (
-				<div className='flex flex-col items-center justify-center min-h-[300px] md:h-125 border rounded-lg bg-card text-muted-foreground w-full p-6'>
+				<div
+					aria-busy='true'
+					className='flex flex-col items-center justify-center min-h-75 md:h-125 border rounded-lg bg-card text-muted-foreground w-full p-6'
+				>
 					<Loader2 className='w-12 h-12 animate-spin mb-4 text-primary' />
 					<p className='text-lg font-medium'>Analyzing differences...</p>
 					<p className='text-sm mt-2 max-w-100 text-center'>
@@ -246,7 +254,7 @@ export function ComparePanel() {
 					</CardHeader>
 					<CardContent className='p-0'>
 						{result.changes && result.changes.length > 0 ? (
-							<ScrollArea className='max-h-[600px]'>
+							<ScrollArea className='max-h-150'>
 								<div className='divide-y'>
 									{result.changes.map((change, idx) => (
 										<div

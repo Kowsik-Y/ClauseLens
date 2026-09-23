@@ -1,23 +1,33 @@
-import { GoogleGenAI, Type } from '@google/genai';
+import { DEFAULT_MODEL, ai } from '@/lib/ai/client';
+import { checkRateLimit } from '@/lib/rateLimit';
+import { sanitizeText } from '@/lib/validators';
+import { Type } from '@google/genai';
 import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
-const ai = new GoogleGenAI({
-	apiKey: process.env.GEMINI_API_KEY,
-	...(process.env.GEMINI_BASE_URL && {
-		httpOptions: { baseUrl: process.env.GEMINI_BASE_URL },
-	}),
+const CompareRequestSchema = z.object({
+	documentA: z.string().min(1).max(100000),
+	documentB: z.string().min(1).max(100000),
 });
 
 export async function POST(req: NextRequest) {
 	try {
-		const { documentA, documentB } = await req.json();
+		const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
+		if (!checkRateLimit(ip)) {
+			return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+		}
 
-		if (!documentA || !documentB) {
+		const body = await req.json();
+		const parseResult = CompareRequestSchema.safeParse(body);
+
+		if (!parseResult.success) {
 			return NextResponse.json(
-				{ error: 'Missing documentA or documentB' },
+				{ error: 'Invalid request data', details: parseResult.error.format() },
 				{ status: 400 },
 			);
 		}
+
+		const { documentA, documentB } = parseResult.data;
 
 		const prompt = `You are a legal document copilot comparing two versions of a contract.
 Identify the meaningful changes between Document A (Original) and Document B (New).
@@ -29,14 +39,14 @@ Rules:
 4. Ignore minor formatting or trivial word changes that don't affect legal meaning.
 
 Document A (Original):
-${documentA}
+${sanitizeText(documentA)}
 
 Document B (New):
-${documentB}
+${sanitizeText(documentB)}
 `;
 
 		const response = await ai.models.generateContent({
-			model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+			model: DEFAULT_MODEL,
 			contents: prompt,
 			config: {
 				responseMimeType: 'application/json',
@@ -81,7 +91,8 @@ ${documentB}
 		return NextResponse.json(data);
 	} catch (error: unknown) {
 		console.error('AI Compare Error:', error);
-		const message = error instanceof Error ? error.message : 'Unknown error';
+		const message =
+			error instanceof Error ? error.message : 'An unexpected error occurred';
 		return NextResponse.json(
 			{ error: `Failed to compare documents: ${message}` },
 			{ status: 500 },

@@ -25,11 +25,16 @@ export function validateFileSize(
 }
 
 /**
- * Sanitizes input text to remove potentially harmful characters.
+ * Sanitizes input text to remove potentially harmful characters and patterns.
+ * Strips HTML tags, null bytes, and common injection patterns.
  * @param text - The raw input text
  * @returns The sanitized text
  */
 export function sanitizeText(text: string): string {
-	// Simple sanitation logic for demonstration
-	return text.replace(/[<>]/g, '');
+	return text
+		.replace(/\0/g, '') // Remove null bytes
+		.replace(/<[^>]*>/g, '') // Strip HTML tags
+		.replace(/javascript:/gi, '') // Remove javascript: protocol
+		.replace(/on\w+\s*=/gi, '') // Remove inline event handlers
+		.trim();
 }

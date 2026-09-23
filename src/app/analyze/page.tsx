@@ -135,7 +135,10 @@ export default function AnalyzePage() {
 
 			<div className='w-full'>
 				{analyzing ? (
-					<div className='flex flex-col items-center justify-center min-h-[300px] md:h-125 border rounded-lg bg-card text-muted-foreground w-full p-6'>
+					<div
+						aria-busy='true'
+						className='flex flex-col items-center justify-center min-h-75 md:h-125 border rounded-lg bg-card text-muted-foreground w-full p-6'
+					>
 						<Loader2 className='w-12 h-12 animate-spin mb-4 text-primary' />
 						<p className='text-lg font-medium'>Analyzing document with AI...</p>
 						<p className='text-sm mt-2 max-w-100 text-center'>

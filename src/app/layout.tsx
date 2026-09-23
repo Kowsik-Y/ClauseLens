@@ -41,6 +41,15 @@ export default function RootLayout({
 						<main id='main-content' className='flex-1 w-full bg-muted/10'>
 							{children}
 						</main>
+						<footer className='w-full border-t bg-background/95 py-6'>
+							<div className='container mx-auto px-4 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground'>
+								<p>
+									&copy; {new Date().getFullYear()} ClauseLens. For
+									informational purposes only &mdash; not legal advice.
+								</p>
+								<p className='text-xs'>Powered by Google Gemini AI</p>
+							</div>
+						</footer>
 					</div>
 				</TooltipProvider>
 				<Toaster />

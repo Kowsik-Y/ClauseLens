@@ -1,16 +1,10 @@
+import { DEFAULT_MODEL, ai } from '@/lib/ai/client';
 import { buildAnalysisPrompt, parseAnalysisResponse } from '@/lib/ai/prompts';
 import { checkRateLimit } from '@/lib/rateLimit';
-import { GoogleGenAI, Type } from '@google/genai';
+import { sanitizeText } from '@/lib/validators';
+import { Type } from '@google/genai';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-
-// Ensure the API key is set in your .env or .env.local file
-const ai = new GoogleGenAI({
-	apiKey: process.env.GEMINI_API_KEY,
-	...(process.env.GEMINI_BASE_URL && {
-		httpOptions: { baseUrl: process.env.GEMINI_BASE_URL },
-	}),
-});
 
 const AnalyzeRequestSchema = z.object({
 	documentText: z.string().min(1).max(100000),
@@ -36,10 +30,10 @@ export async function POST(req: NextRequest) {
 
 		const { documentText, mode } = parseResult.data;
 
-		const prompt = buildAnalysisPrompt(documentText, mode);
+		const prompt = buildAnalysisPrompt(sanitizeText(documentText), mode);
 
 		const response = await ai.models.generateContent({
-			model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+			model: DEFAULT_MODEL,
 			contents: prompt,
 			config: {
 				responseMimeType: 'application/json',

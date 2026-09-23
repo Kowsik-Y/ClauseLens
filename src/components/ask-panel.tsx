@@ -65,6 +65,7 @@ export function AskPanel({ documentText }: { documentText: string }) {
 			<CardContent className='flex-1 flex flex-col min-h-0'>
 				<div className='flex gap-2 mb-4 shrink-0'>
 					<Input
+						aria-label='Ask a question about this document'
 						placeholder='Ask a question about this document...'
 						value={question}
 						onChange={(e) => setQuestion(e.target.value)}
@@ -72,6 +73,7 @@ export function AskPanel({ documentText }: { documentText: string }) {
 						className='flex-1'
 					/>
 					<Button
+						aria-label='Send question'
 						onClick={() => handleAsk()}
 						disabled={loading || !question.trim()}
 					>
@@ -101,7 +103,10 @@ export function AskPanel({ documentText }: { documentText: string }) {
 
 				<ScrollArea className='flex-1 min-h-0 pr-4'>
 					{error && (
-						<div className='p-3 bg-destructive/10 text-destructive rounded-md text-sm mb-4'>
+						<div
+							role='alert'
+							className='p-3 bg-destructive/10 text-destructive rounded-md text-sm mb-4'
+						>
 							{error}
 						</div>
 					)}
@@ -112,7 +117,7 @@ export function AskPanel({ documentText }: { documentText: string }) {
 								<h4 className='font-medium text-sm mb-2 text-foreground/80'>
 									Answer
 								</h4>
-								<p className='text-sm whitespace-pre-wrap break-words leading-relaxed'>
+								<p className='text-sm whitespace-pre-wrap wrap-break-word leading-relaxed'>
 									{result.answer}
 								</p>
 
@@ -160,7 +165,7 @@ export function AskPanel({ documentText }: { documentText: string }) {
 												key={fu}
 												variant='outline'
 												size='sm'
-												className='justify-start text-left h-auto py-2 px-3 text-xs whitespace-normal break-words'
+												className='justify-start text-left h-auto py-2 px-3 text-xs whitespace-normal wrap-break-word'
 												onClick={() => handleAsk(fu)}
 											>
 												{fu}

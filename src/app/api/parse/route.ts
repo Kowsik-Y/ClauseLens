@@ -1,7 +1,13 @@
+import { checkRateLimit } from '@/lib/rateLimit';
 import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
 	try {
+		const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
+		if (!checkRateLimit(ip)) {
+			return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+		}
+
 		const formData = await req.formData();
 		const file = formData.get('file') as File | null;
 
@@ -20,15 +26,17 @@ export async function POST(req: NextRequest) {
 		let text = '';
 
 		if (file.name.endsWith('.pdf') || file.type === 'application/pdf') {
-			// @ts-ignore
-			const pdfParse = require('pdf-parse');
+			const mod = await import('pdf-parse');
+			const pdfParse = ('default' in mod ? mod.default : mod) as unknown as (
+				buffer: Buffer,
+			) => Promise<{ text: string }>;
 			const pdfData = await pdfParse(buffer);
 			text = pdfData.text;
 		} else if (
 			file.name.endsWith('.docx') ||
 			file.type.includes('wordprocessingml.document')
 		) {
-			const mammoth = require('mammoth');
+			const mammoth = await import('mammoth');
 			const result = await mammoth.extractRawText({ buffer });
 			text = result.value;
 		} else if (file.name.endsWith('.txt') || file.type.includes('text')) {

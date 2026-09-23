@@ -1,23 +1,33 @@
-import { GoogleGenAI, Type } from '@google/genai';
+import { DEFAULT_MODEL, ai } from '@/lib/ai/client';
+import { checkRateLimit } from '@/lib/rateLimit';
+import { sanitizeText } from '@/lib/validators';
+import { Type } from '@google/genai';
 import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
-const ai = new GoogleGenAI({
-	apiKey: process.env.GEMINI_API_KEY,
-	...(process.env.GEMINI_BASE_URL && {
-		httpOptions: { baseUrl: process.env.GEMINI_BASE_URL },
-	}),
+const QaRequestSchema = z.object({
+	documentText: z.string().min(1).max(100000),
+	question: z.string().min(1).max(2000),
 });
 
 export async function POST(req: NextRequest) {
 	try {
-		const { documentText, question } = await req.json();
+		const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
+		if (!checkRateLimit(ip)) {
+			return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+		}
 
-		if (!documentText || !question) {
+		const body = await req.json();
+		const parseResult = QaRequestSchema.safeParse(body);
+
+		if (!parseResult.success) {
 			return NextResponse.json(
-				{ error: 'Missing document text or question' },
+				{ error: 'Invalid request data', details: parseResult.error.format() },
 				{ status: 400 },
 			);
 		}
+
+		const { documentText, question } = parseResult.data;
 
 		const prompt = `You are a legal document copilot answering a user's question about a document.
 Follow these rules strictly:
@@ -27,14 +37,14 @@ Follow these rules strictly:
 4. Include a concise source basis in the citations array.
 5. Provide 2 logical follow-up questions the user might want to ask.
 
-User Question: ${question}
+User Question: ${sanitizeText(question)}
 
 Document text:
-${documentText}
+${sanitizeText(documentText)}
 `;
 
 		const response = await ai.models.generateContent({
-			model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+			model: DEFAULT_MODEL,
 			contents: prompt,
 			config: {
 				responseMimeType: 'application/json',
@@ -70,7 +80,8 @@ ${documentText}
 		return NextResponse.json(data);
 	} catch (error: unknown) {
 		console.error('AI QA Error:', error);
-		const message = error instanceof Error ? error.message : 'Unknown error';
+		const message =
+			error instanceof Error ? error.message : 'An unexpected error occurred';
 		return NextResponse.json(
 			{ error: `Failed to answer question: ${message}` },
 			{ status: 500 },

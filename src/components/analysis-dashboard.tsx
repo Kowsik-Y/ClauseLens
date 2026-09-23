@@ -39,19 +39,6 @@ const AskPanel = dynamic(() => import('./ask-panel').then((m) => m.AskPanel), {
 });
 import { ChecklistPanel } from './checklist-panel';
 
-function getSeverityColor(severity: string) {
-	switch (severity.toLowerCase()) {
-		case 'high':
-			return 'destructive';
-		case 'medium':
-			return 'warning';
-		case 'low':
-			return 'secondary';
-		default:
-			return 'default';
-	}
-}
-
 function getSeverityIcon(severity: string) {
 	switch (severity.toLowerCase()) {
 		case 'high':
@@ -145,7 +132,9 @@ export const AnalysisDashboard = React.memo(function AnalysisDashboard({
 									<div className='space-y-1 flex-1'>
 										<div className='flex items-start justify-between gap-4'>
 											<h4 className='font-semibold text-sm'>{risk.title}</h4>
-											<RiskBadge severity={risk.severity as 'high' | 'medium' | 'low'} />
+											<RiskBadge
+												severity={risk.severity as 'high' | 'medium' | 'low'}
+											/>
 										</div>
 										<p className='text-sm text-muted-foreground'>
 											{risk.detail}
@@ -209,35 +198,55 @@ export const AnalysisDashboard = React.memo(function AnalysisDashboard({
 				<div className='space-y-3'>
 					<h3 className='text-lg font-semibold'>Obligations</h3>
 					<div className='rounded-md border bg-card overflow-x-auto'>
-						<div className='min-w-150'>
-							<div className='grid grid-cols-12 gap-2 p-3 font-semibold text-xs text-muted-foreground uppercase  bg-muted/40 border-b'>
-								<div className='col-span-3'>Party</div>
-								<div className='col-span-5'>Obligation</div>
-								<div className='col-span-3'>Trigger / Deadline</div>
-								<div className='col-span-1 text-right'>Ref</div>
-							</div>
-							<div className='divide-y text-sm'>
-								{result.obligations.map((obs) => (
-									<div
-										key={`${obs.party}-${obs.obligation}`}
-										className='grid grid-cols-12 gap-2 p-3 hover:bg-muted/20 transition-colors'
+						<table className='w-full min-w-150 text-sm'>
+							<thead>
+								<tr className='bg-muted/40 border-b'>
+									<th
+										scope='col'
+										className='p-3 text-left font-semibold text-xs text-muted-foreground uppercase'
 									>
-										<div className='col-span-3 font-medium text-foreground/90'>
+										Party
+									</th>
+									<th
+										scope='col'
+										className='p-3 text-left font-semibold text-xs text-muted-foreground uppercase'
+									>
+										Obligation
+									</th>
+									<th
+										scope='col'
+										className='p-3 text-left font-semibold text-xs text-muted-foreground uppercase'
+									>
+										Trigger / Deadline
+									</th>
+									<th
+										scope='col'
+										className='p-3 text-right font-semibold text-xs text-muted-foreground uppercase'
+									>
+										Ref
+									</th>
+								</tr>
+							</thead>
+							<tbody className='divide-y'>
+								{result.obligations.map((obs) => (
+									<tr
+										key={`${obs.party}-${obs.obligation}`}
+										className='hover:bg-muted/20 transition-colors'
+									>
+										<td className='p-3 font-medium text-foreground/90'>
 											{obs.party}
-										</div>
-										<div className='col-span-5 text-muted-foreground'>
+										</td>
+										<td className='p-3 text-muted-foreground'>
 											{obs.obligation}
-										</div>
-										<div className='col-span-3 text-muted-foreground'>
-											{obs.trigger}
-										</div>
-										<div className='col-span-1 text-right text-xs text-muted-foreground font-mono'>
+										</td>
+										<td className='p-3 text-muted-foreground'>{obs.trigger}</td>
+										<td className='p-3 text-right text-xs text-muted-foreground font-mono'>
 											{obs.page}
-										</div>
-									</div>
+										</td>
+									</tr>
 								))}
-							</div>
-						</div>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			)}

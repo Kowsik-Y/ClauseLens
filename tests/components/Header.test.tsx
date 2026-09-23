@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { Header } from '../src/components/Header';
+import { Header } from '../../src/components/Header';
 
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
@@ -22,5 +22,23 @@ describe('Header Component', () => {
 	it('renders AI Powered badge', () => {
 		render(<Header />);
 		expect(screen.getByText('AI Powered')).toBeInTheDocument();
+	});
+
+	it('renders as a header element', () => {
+		const { container } = render(<Header />);
+		expect(container.querySelector('header')).toBeInTheDocument();
+	});
+
+	it('renders nav element', () => {
+		const { container } = render(<Header />);
+		expect(container.querySelector('nav')).toBeInTheDocument();
+	});
+
+	it('has correct link hrefs', () => {
+		render(<Header />);
+		const analyzeLink = screen.getByText('Analyze').closest('a');
+		const compareLink = screen.getByText('Compare').closest('a');
+		expect(analyzeLink).toHaveAttribute('href', '/analyze');
+		expect(compareLink).toHaveAttribute('href', '/compare');
 	});
 });
