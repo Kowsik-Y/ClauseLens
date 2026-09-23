@@ -1,5 +1,8 @@
+import { buildAnalysisPrompt, parseAnalysisResponse } from '@/lib/ai/prompts';
+import { checkRateLimit } from '@/lib/rateLimit';
 import { GoogleGenAI, Type } from '@google/genai';
 import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 // Ensure the API key is set in your .env or .env.local file
 const ai = new GoogleGenAI({
@@ -9,36 +12,31 @@ const ai = new GoogleGenAI({
 	}),
 });
 
+const AnalyzeRequestSchema = z.object({
+	documentText: z.string().min(1).max(100000),
+	mode: z.string().optional().default('Full Analysis'),
+});
+
 export async function POST(req: NextRequest) {
 	try {
-		const { documentText, mode } = await req.json();
+		const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
+		if (!checkRateLimit(ip)) {
+			return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+		}
 
-		if (!documentText) {
+		const body = await req.json();
+		const parseResult = AnalyzeRequestSchema.safeParse(body);
+
+		if (!parseResult.success) {
 			return NextResponse.json(
-				{ error: 'No document text provided' },
+				{ error: 'Invalid request data', details: parseResult.error.format() },
 				{ status: 400 },
 			);
 		}
 
-		if (documentText.length > 100000) {
-			return NextResponse.json(
-				{ error: 'Document text exceeds the 100,000 character limit.' },
-				{ status: 413 },
-			);
-		}
+		const { documentText, mode } = parseResult.data;
 
-		const prompt = `You are a legal document copilot. Analyze the provided legal document based on the user's request.
-Follow these rules strictly:
-1. ONLY use information contained in the provided document.
-2. NEVER fabricate parties, dates, clauses, or citations.
-3. If information is absent, indicate it.
-4. Provide source citations where possible (e.g., [SECTION: Termination]).
-5. Do not give legal advice; phrase things as "The document states..." or "Consider asking a professional..."
-6. The mode of analysis is: ${mode}
-
-Document text:
-${documentText}
-`;
+		const prompt = buildAnalysisPrompt(documentText, mode);
 
 		const response = await ai.models.generateContent({
 			model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
@@ -147,10 +145,7 @@ ${documentText}
 		});
 
 		const rawText = response.text || '{}';
-		const cleanText = rawText
-			.replace(/^```(json)?\s*/i, '')
-			.replace(/\s*```$/i, '');
-		const data = JSON.parse(cleanText);
+		const data = parseAnalysisResponse(rawText);
 		return NextResponse.json(data);
 	} catch (error: unknown) {
 		console.error('AI Analysis Error:', error);

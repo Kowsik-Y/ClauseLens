@@ -31,8 +31,16 @@ export default function RootLayout({
 			<body className='min-h-full flex flex-col'>
 				<TooltipProvider>
 					<div className='flex flex-col min-h-screen'>
+						<a
+							href='#main-content'
+							className='sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-background p-2 z-50 rounded-md border'
+						>
+							Skip to main content
+						</a>
 						<Header />
-						<main className='flex-1 w-full bg-muted/10'>{children}</main>
+						<main id='main-content' className='flex-1 w-full bg-muted/10'>
+							{children}
+						</main>
 					</div>
 				</TooltipProvider>
 				<Toaster />

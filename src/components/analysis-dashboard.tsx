@@ -1,5 +1,6 @@
 'use client';
 
+import { RiskBadge } from '@/components/RiskBadge';
 import {
 	Accordion,
 	AccordionContent,
@@ -71,7 +72,7 @@ export const AnalysisDashboard = React.memo(function AnalysisDashboard({
 	const [isChatOpen, setIsChatOpen] = useState(false);
 
 	return (
-		<div className='space-y-6 relative'>
+		<div className='space-y-6 relative' aria-live='polite'>
 			{/* Executive Summary */}
 			<Card className='border-border/60'>
 				<CardHeader className='pb-3'>
@@ -144,12 +145,7 @@ export const AnalysisDashboard = React.memo(function AnalysisDashboard({
 									<div className='space-y-1 flex-1'>
 										<div className='flex items-start justify-between gap-4'>
 											<h4 className='font-semibold text-sm'>{risk.title}</h4>
-											<Badge
-												variant='outline'
-												className='text-xs shrink-0 capitalize'
-											>
-												{risk.severity} Risk
-											</Badge>
+											<RiskBadge severity={risk.severity as 'high' | 'medium' | 'low'} />
 										</div>
 										<p className='text-sm text-muted-foreground'>
 											{risk.detail}
@@ -213,7 +209,7 @@ export const AnalysisDashboard = React.memo(function AnalysisDashboard({
 				<div className='space-y-3'>
 					<h3 className='text-lg font-semibold'>Obligations</h3>
 					<div className='rounded-md border bg-card overflow-x-auto'>
-						<div className='min-w-[600px]'>
+						<div className='min-w-150'>
 							<div className='grid grid-cols-12 gap-2 p-3 font-semibold text-xs text-muted-foreground uppercase  bg-muted/40 border-b'>
 								<div className='col-span-3'>Party</div>
 								<div className='col-span-5'>Obligation</div>
@@ -258,7 +254,7 @@ export const AnalysisDashboard = React.memo(function AnalysisDashboard({
 			{/* Floating Chat Widget */}
 			<div className='fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-4'>
 				{isChatOpen && (
-					<div className='w-[calc(100vw-2rem)] sm:w-[400px] h-[60vh] sm:h-[550px] shadow-2xl rounded-xl overflow-hidden bg-background animate-in slide-in-from-bottom-5 duration-200'>
+					<div className='w-[calc(100vw-2rem)] sm:w-100 h-[60vh] sm:h-137.5 shadow-2xl rounded-xl overflow-hidden bg-background animate-in slide-in-from-bottom-5 duration-200'>
 						<AskPanel documentText={documentText} />
 					</div>
 				)}
