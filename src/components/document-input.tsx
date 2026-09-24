@@ -63,27 +63,10 @@ export function DocumentInput({
 					</TabsList>
 
 					<TabsContent value='upload'>
-						{/* biome-ignore lint/a11y/useSemanticElements: Drag drop area needs to be a div */}
-						<div
-							role='button'
-							tabIndex={0}
-							aria-label='File upload drop zone'
-							className={`flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isDragging ? 'border-primary bg-primary/5' : 'border-border/60 hover:bg-muted/30'}`}
-							onDragOver={(e) => {
-								e.preventDefault();
-								setIsDragging(true);
-							}}
-							onDragLeave={() => setIsDragging(false)}
-							onDrop={handleDrop}
-							onClick={() => fileInputRef.current?.click()}
-							onKeyDown={(e) => {
-								if (e.key === 'Enter' || e.key === ' ') {
-									e.preventDefault();
-									fileInputRef.current?.click();
-								}
-							}}
-						>
-							{file ? (
+						{file ? (
+							<div
+								className={`flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg transition-colors border-border/60`}
+							>
 								<div className='flex flex-col items-center gap-2'>
 									<div className='p-3 bg-primary/10 text-primary rounded-full'>
 										<FileText className='w-8 h-8' />
@@ -107,7 +90,20 @@ export function DocumentInput({
 										<X className='w-4 h-4 mr-1' /> Remove
 									</Button>
 								</div>
-							) : (
+							</div>
+						) : (
+							<button
+								type='button'
+								aria-label='File upload drop zone'
+								className={`w-full flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isDragging ? 'border-primary bg-primary/5' : 'border-border/60 hover:bg-muted/30'}`}
+								onDragOver={(e) => {
+									e.preventDefault();
+									setIsDragging(true);
+								}}
+								onDragLeave={() => setIsDragging(false)}
+								onDrop={handleDrop}
+								onClick={() => fileInputRef.current?.click()}
+							>
 								<div className='flex flex-col items-center gap-2 text-center'>
 									<div className='p-3 bg-muted text-muted-foreground rounded-full'>
 										<UploadCloud className='w-8 h-8' />
@@ -119,9 +115,9 @@ export function DocumentInput({
 										</p>
 									</div>
 									<div className='mt-4 relative'>
-										<Button variant='secondary' size='sm'>
+										<span className='inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-3'>
 											Select File
-										</Button>
+										</span>
 										<input
 											ref={fileInputRef}
 											type='file'
@@ -133,8 +129,8 @@ export function DocumentInput({
 										/>
 									</div>
 								</div>
-							)}
-						</div>
+							</button>
+						)}
 					</TabsContent>
 
 					<TabsContent value='paste'>
