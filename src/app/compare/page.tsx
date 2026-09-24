@@ -1,6 +1,19 @@
 'use client';
 
-import { ComparePanel } from '@/components/compare-panel';
+import { Loader2 } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const ComparePanel = dynamic(
+	() => import('@/components/compare-panel').then((m) => m.ComparePanel),
+	{
+		ssr: false,
+		loading: () => (
+			<div className='flex justify-center p-8'>
+				<Loader2 className='w-8 h-8 animate-spin text-primary' />
+			</div>
+		),
+	},
+);
 
 export default function ComparePage() {
 	return (
