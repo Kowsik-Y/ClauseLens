@@ -27,7 +27,7 @@ import {
 	Plus,
 	UploadCloud,
 } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 export function ComparePanel() {
@@ -67,8 +67,16 @@ export function ComparePanel() {
 		}
 	}, []);
 
+	const abortControllerRef = useRef<AbortController | null>(null);
+
 	const handleCompare = useCallback(async () => {
 		if (!docA.trim() || !docB.trim()) return;
+
+		if (abortControllerRef.current) {
+			abortControllerRef.current.abort();
+		}
+		const abortController = new AbortController();
+		abortControllerRef.current = abortController;
 
 		setIsDialogOpen(false);
 		setLoading(true);
@@ -80,17 +88,21 @@ export function ComparePanel() {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ documentA: docA, documentB: docB }),
+				signal: abortController.signal,
 			});
 
 			if (!res.ok) throw new Error('Failed to compare documents.');
 			const data = await res.json();
 			setResult(data);
 		} catch (err: unknown) {
+			if (err instanceof Error && err.name === 'AbortError') return;
 			setError(
 				(err as Error).message || 'An error occurred during comparison.',
 			);
 		} finally {
-			setLoading(false);
+			if (abortControllerRef.current === abortController) {
+				setLoading(false);
+			}
 		}
 	}, [docA, docB]);
 

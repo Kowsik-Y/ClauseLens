@@ -1,0 +1,7 @@
+# ClauseLens
+
+> AI-powered legal document copilot and context-aware intelligence
+
+- [ClauseLens](/)
+- [Analyze Document](/analyze)
+- [Compare Documents](/compare)

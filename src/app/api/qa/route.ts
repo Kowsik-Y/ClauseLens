@@ -1,9 +1,11 @@
 import { DEFAULT_MODEL, ai } from '@/lib/ai/client';
 import { checkRateLimit } from '@/lib/rateLimit';
-import { sanitizeText } from '@/lib/validators';
-import { Type } from '@google/genai';
+import { sanitizeText, scanForInjectionArtifacts } from '@/lib/validators';
+import { type Schema, Type } from '@google/genai';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+
+export const maxDuration = 60;
 
 export const runtime = 'edge';
 
@@ -12,6 +14,31 @@ const QaRequestSchema = z.object({
 	question: z.string().min(1).max(2000),
 });
 
+const QA_RESPONSE_SCHEMA: Schema = {
+	type: Type.OBJECT,
+	properties: {
+		answer: {
+			type: Type.STRING,
+			description: 'Plain-English response based on the document.',
+		},
+		citations: {
+			type: Type.ARRAY,
+			items: { type: Type.STRING },
+			description: "Sources like 'Page 6 - Termination Clause'",
+		},
+		notFound: {
+			type: Type.BOOLEAN,
+			description: 'True if the answer cannot be found in the document.',
+		},
+		followUps: {
+			type: Type.ARRAY,
+			items: { type: Type.STRING },
+			description: 'Follow-up questions.',
+		},
+	},
+	required: ['answer', 'citations', 'notFound', 'followUps'],
+};
+
 export async function POST(req: NextRequest) {
 	try {
 		const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
@@ -19,7 +46,28 @@ export async function POST(req: NextRequest) {
 			return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
 		}
 
-		const body = await req.json();
+		// Limit the request body size parsing to avoid OOM
+		const bodyText = await req.text();
+		if (bodyText.length > 500000) {
+			// 500KB max raw body size
+			return NextResponse.json({ error: 'Payload too large' }, { status: 413 });
+		}
+
+		const body = (() => {
+			try {
+				return JSON.parse(bodyText);
+			} catch {
+				return null;
+			}
+		})();
+
+		if (!body) {
+			return NextResponse.json(
+				{ error: 'Invalid JSON payload' },
+				{ status: 400 },
+			);
+		}
+
 		const parseResult = QaRequestSchema.safeParse(body);
 
 		if (!parseResult.success) {
@@ -31,7 +79,7 @@ export async function POST(req: NextRequest) {
 
 		const { documentText, question } = parseResult.data;
 
-		const prompt = `You are a legal document copilot answering a user's question about a document.
+		const systemInstruction = `You are a legal document copilot answering a user's question about a document.
 Follow these rules strictly:
 1. ONLY use information contained in the provided document to answer the question.
 2. NEVER fabricate information or guess. If the answer cannot be supported by the document, set notFound to true.
@@ -40,52 +88,69 @@ Follow these rules strictly:
 5. Provide 2 logical follow-up questions the user might want to ask.
 
 User Question: ${sanitizeText(question)}
-
-Document text:
-${sanitizeText(documentText)}
 `;
 
 		const response = await ai.models.generateContent({
 			model: DEFAULT_MODEL,
-			contents: prompt,
-			config: {
-				responseMimeType: 'application/json',
-				responseSchema: {
-					type: Type.OBJECT,
-					properties: {
-						answer: {
-							type: Type.STRING,
-							description: 'Plain-English response based on the document.',
-						},
-						citations: {
-							type: Type.ARRAY,
-							items: { type: Type.STRING },
-							description: "Sources like 'Page 6 - Termination Clause'",
-						},
-						notFound: {
-							type: Type.BOOLEAN,
-							description:
-								'True if the answer cannot be found in the document.',
-						},
-						followUps: {
-							type: Type.ARRAY,
-							items: { type: Type.STRING },
-							description: 'Follow-up questions.',
-						},
-					},
-					required: ['answer', 'citations', 'notFound', 'followUps'],
+			contents: [
+				{
+					role: 'user',
+					parts: [{ text: `Document text:\n${sanitizeText(documentText)}` }],
 				},
+			],
+			config: {
+				systemInstruction,
+				responseMimeType: 'application/json',
+				responseSchema: QA_RESPONSE_SCHEMA,
 			},
 		});
 
-		const data = JSON.parse(response.text || '{}');
-		return NextResponse.json(data);
+		const rawText = response.text || '{}';
+		const data = (() => {
+			try {
+				return JSON.parse(rawText);
+			} catch {
+				return null;
+			}
+		})();
+
+		if (!data) {
+			return NextResponse.json(
+				{
+					error:
+						'Live analysis unavailable. The service returned an invalid response format.',
+				},
+				{ status: 502 },
+			);
+		}
+
+		if (scanForInjectionArtifacts(data)) {
+			console.warn('Injection artifacts detected in QA output');
+			return NextResponse.json(
+				{
+					error:
+						'Analysis could not be completed due to document content issues.',
+				},
+				{ status: 502 },
+			);
+		}
+
+		// Defense in Depth: Strip any properties not explicitly requested in our QA_RESPONSE_SCHEMA
+		const allowedKeys = new Set(
+			Object.keys(QA_RESPONSE_SCHEMA.properties as Record<string, unknown>),
+		);
+		const safeData: Record<string, unknown> = {};
+		for (const key of allowedKeys) {
+			if (key in data) {
+				safeData[key] = data[key];
+			}
+		}
+
+		return NextResponse.json(safeData);
 	} catch (error: unknown) {
 		console.error('AI QA Error:', error);
-		const message =
-			error instanceof Error ? error.message : 'An unexpected error occurred';
 		return NextResponse.json(
-			{ error: `Failed to answer question: ${message}` },
+			{ error: 'An internal error occurred while answering the question.' },
 			{ status: 500 },
 		);
 	}

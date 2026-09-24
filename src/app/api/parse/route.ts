@@ -1,6 +1,8 @@
 import { checkRateLimit } from '@/lib/rateLimit';
 import { type NextRequest, NextResponse } from 'next/server';
 
+export const maxDuration = 60;
+
 export async function POST(req: NextRequest) {
 	try {
 		const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
@@ -15,9 +17,9 @@ export async function POST(req: NextRequest) {
 			return NextResponse.json({ error: 'No file provided' }, { status: 400 });
 		}
 
-		if (file.size > 10 * 1024 * 1024) {
+		if (file.size > 5 * 1024 * 1024) {
 			return NextResponse.json(
-				{ error: 'File size exceeds the 10MB limit.' },
+				{ error: 'File size exceeds the 5MB limit.' },
 				{ status: 413 },
 			);
 		}

@@ -12,7 +12,14 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { QaResult } from '@/lib/types';
 import { AlertCircle, Loader2, MessageSquare, Send } from 'lucide-react';
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+
+const SUGGESTIONS = [
+	'Can I terminate this agreement early?',
+	'What payments am I responsible for?',
+	'What happens if I breach the contract?',
+	'Does this renew automatically?',
+];
 
 export function AskPanel({ documentText }: { documentText: string }) {
 	const [question, setQuestion] = useState('');
@@ -20,36 +27,44 @@ export function AskPanel({ documentText }: { documentText: string }) {
 	const [result, setResult] = useState<QaResult | null>(null);
 	const [error, setError] = useState<string | null>(null);
 
-	const SUGGESTIONS = [
-		'Can I terminate this agreement early?',
-		'What payments am I responsible for?',
-		'What happens if I breach the contract?',
-		'Does this renew automatically?',
-	];
+	const abortControllerRef = useRef<AbortController | null>(null);
 
-	const handleAsk = async (q: string = question) => {
-		if (!q.trim() || !documentText) return;
+	const handleAsk = useCallback(
+		async (q: string = question) => {
+			if (!q.trim() || !documentText) return;
 
-		setLoading(true);
-		setError(null);
-		setQuestion(q);
+			if (abortControllerRef.current) {
+				abortControllerRef.current.abort();
+			}
+			const abortController = new AbortController();
+			abortControllerRef.current = abortController;
 
-		try {
-			const res = await fetch('/api/qa', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ documentText, question: q }),
-			});
+			setLoading(true);
+			setError(null);
+			setQuestion(q);
 
-			if (!res.ok) throw new Error('Failed to get an answer.');
-			const data = await res.json();
-			setResult(data);
-		} catch (err: unknown) {
-			setError((err as Error).message || 'An error occurred');
-		} finally {
-			setLoading(false);
-		}
-	};
+			try {
+				const res = await fetch('/api/qa', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ documentText, question: q }),
+					signal: abortController.signal,
+				});
+
+				if (!res.ok) throw new Error('Failed to get an answer.');
+				const data = await res.json();
+				setResult(data);
+			} catch (err: unknown) {
+				if (err instanceof Error && err.name === 'AbortError') return;
+				setError((err as Error).message || 'An error occurred');
+			} finally {
+				if (abortControllerRef.current === abortController) {
+					setLoading(false);
+				}
+			}
+		},
+		[question, documentText],
+	);
 
 	return (
 		<Card className='h-full border-border/60  flex flex-col'>

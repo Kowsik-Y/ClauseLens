@@ -16,17 +16,21 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import { FileQuestion, HelpCircle, ListTodo } from 'lucide-react';
+import { CheckCircle2, FileQuestion, HelpCircle, ListTodo } from 'lucide-react';
 import { useState } from 'react';
 
 export function ChecklistPanel({
 	checklist,
 	questions,
 }: { checklist: string[]; questions: string[] }) {
-	const [checkedItems, setCheckedItems] = useState<Record<number, boolean>>({});
+	const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
 
 	const toggleCheck = (index: number) => {
-		setCheckedItems((prev) => ({ ...prev, [index]: !prev[index] }));
+		setCheckedItems((prev) => {
+			const next = [...prev];
+			next[index] = !next[index];
+			return next;
+		});
 	};
 
 	return (
@@ -81,7 +85,7 @@ export function ChecklistPanel({
 								</Button>
 							}
 						/>
-						<DialogContent className='sm:max-w-[500px]'>
+						<DialogContent className='sm:max-w-125'>
 							<DialogHeader>
 								<DialogTitle>Questions for Legal Counsel</DialogTitle>
 								<DialogDescription>
@@ -105,27 +109,5 @@ export function ChecklistPanel({
 				</CardFooter>
 			)}
 		</Card>
-	);
-}
-
-function CheckCircle2(props: React.SVGProps<SVGSVGElement>) {
-	return (
-		<svg
-			aria-label='Check circle icon'
-			{...props}
-			xmlns='http://www.w3.org/2000/svg'
-			width='24'
-			height='24'
-			viewBox='0 0 24 24'
-			fill='none'
-			stroke='currentColor'
-			strokeWidth='2'
-			strokeLinecap='round'
-			strokeLinejoin='round'
-		>
-			<circle cx='12' cy='12' r='10' />
-			<title>Check icon</title>
-			<path d='m9 12 2 2 4-4' />
-		</svg>
 	);
 }

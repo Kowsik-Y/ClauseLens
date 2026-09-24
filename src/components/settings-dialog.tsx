@@ -76,16 +76,16 @@ export function SettingsDialog() {
 
 					<div className='grid gap-2'>
 						<Label htmlFor='model'>AI Model</Label>
-						<Select defaultValue='gemini-1.5-pro'>
+						<Select defaultValue='gemini-2.5-flash'>
 							<SelectTrigger id='model'>
 								<SelectValue placeholder='Select AI model' />
 							</SelectTrigger>
 							<SelectContent className='w-fit'>
-								<SelectItem value='gemini-1.5-pro'>
-									Google Gemini 1.5 Pro
+								<SelectItem value='gemini-2.5-pro'>
+									Google Gemini 2.5 Pro
 								</SelectItem>
-								<SelectItem value='gemini-1.5-flash'>
-									Google Gemini 1.5 Flash
+								<SelectItem value='gemini-2.5-flash'>
+									Google Gemini 2.5 Flash
 								</SelectItem>
 							</SelectContent>
 						</Select>

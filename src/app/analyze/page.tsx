@@ -11,7 +11,7 @@ import {
 import type { AnalysisResult } from '@/lib/types';
 import { FileUp, Loader2, Plus } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 const AnalysisDashboard = dynamic(
@@ -45,6 +45,8 @@ export default function AnalyzePage() {
 	const [documentText, setDocumentText] = useState('');
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+	const abortControllerRef = useRef<AbortController | null>(null);
+
 	const handleAnalyze = useCallback(
 		async ({
 			text,
@@ -52,6 +54,13 @@ export default function AnalyzePage() {
 			mode,
 		}: { text: string; file?: File; mode: string }) => {
 			setIsDialogOpen(false); // Close dialog immediately when analysis starts
+
+			if (abortControllerRef.current) {
+				abortControllerRef.current.abort();
+			}
+			const abortController = new AbortController();
+			abortControllerRef.current = abortController;
+
 			setAnalyzing(true);
 			setResult(null);
 			setDocumentText('');
@@ -65,6 +74,7 @@ export default function AnalyzePage() {
 					const extractRes = await fetch('/api/parse', {
 						method: 'POST',
 						body: formData,
+						signal: abortController.signal,
 					});
 
 					if (!extractRes.ok) {
@@ -80,6 +90,7 @@ export default function AnalyzePage() {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ documentText: finalDocText, mode }),
+					signal: abortController.signal,
 				});
 
 				if (!analyzeRes.ok) {
@@ -90,12 +101,15 @@ export default function AnalyzePage() {
 				setResult(data);
 				toast.success('Analysis complete!');
 			} catch (error: unknown) {
+				if (error instanceof Error && error.name === 'AbortError') return;
 				toast.error(
 					(error as Error).message || 'An error occurred during analysis.',
 				);
 				console.error(error);
 			} finally {
-				setAnalyzing(false);
+				if (abortControllerRef.current === abortController) {
+					setAnalyzing(false);
+				}
 			}
 		},
 		[],

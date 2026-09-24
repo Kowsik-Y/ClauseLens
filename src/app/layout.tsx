@@ -17,7 +17,29 @@ const fontMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
 	title: 'ClauseLens - AI Legal Document Copilot',
-	description: 'Understand the fine print before you sign.',
+	description:
+		'Understand the fine print before you sign with AI-powered legal document analysis and comparison.',
+	keywords: [
+		'AI',
+		'Legal',
+		'Document Analysis',
+		'Contract',
+		'Copilot',
+		'Gemini',
+	],
+	authors: [{ name: 'ClauseLens Team' }],
+	openGraph: {
+		type: 'website',
+		locale: 'en_US',
+		url: 'https://clauselens.vercel.app',
+		siteName: 'ClauseLens',
+		title: 'ClauseLens - AI Legal Document Copilot',
+		description: 'Understand the fine print before you sign.',
+	},
+	robots: {
+		index: true,
+		follow: true,
+	},
 };
 
 export default function RootLayout({

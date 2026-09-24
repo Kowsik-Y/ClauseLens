@@ -1,0 +1,16 @@
+{
+	"specVersion": "1.0",
+	"entries": [
+		{
+			"identifier": "urn:air:clauselens:navigator:legal-intelligence",
+			"displayName": "ClauseLens Legal Document Copilot",
+			"type": "application/mcp-server-card+json",
+			"url": "/",
+			"representativeQueries": [
+				"analyze contract",
+				"compare legal documents",
+				"extract legal obligations"
+			]
+		}
+	]
+}

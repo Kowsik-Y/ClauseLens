@@ -65,15 +65,15 @@ describe('Parse API Route', () => {
 		expect(data.text).toBe('hello world');
 	});
 
-	it('returns 413 for file over 10MB', async () => {
-		// Mock file size to be larger than 10MB
+	it('returns 413 for file over 5MB', async () => {
+		// Mock file size to be larger than 5MB
 		const file = new File([''], 'large.txt', { type: 'text/plain' });
-		Object.defineProperty(file, 'size', { value: 11 * 1024 * 1024 });
+		Object.defineProperty(file, 'size', { value: 6 * 1024 * 1024 });
 
 		const req = mockRequest(createFormData(file));
 		const res = await POST(req);
 		expect(res.status).toBe(413);
 		const data = await res.json();
-		expect(data.error).toBe('File size exceeds the 10MB limit.');
+		expect(data.error).toBe('File size exceeds the 5MB limit.');
 	});
 });
