@@ -1,6 +1,6 @@
-import { RiskBadge } from '@/components/RiskBadge';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { RiskBadge } from '@/components/RiskBadge';
 
 describe('RiskBadge', () => {
 	it('renders HIGH severity correctly', () => {

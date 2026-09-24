@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { toast } from 'sonner';
-import { type Mock, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 import AnalyzePage from '../../src/app/analyze/page';
 
 vi.mock('next/dynamic', () => ({
@@ -14,7 +14,9 @@ vi.mock('next/dynamic', () => ({
 		if (String(dynamicImport).includes('document-input')) {
 			return function MockDocumentInput({
 				onAnalyze,
-			}: { onAnalyze: (data: unknown) => void }) {
+			}: {
+				onAnalyze: (data: unknown) => void;
+			}) {
 				return (
 					<button
 						type='button'

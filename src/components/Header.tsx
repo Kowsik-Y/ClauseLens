@@ -1,9 +1,9 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import { Scale } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Badge } from '@/components/ui/badge';
 import { SettingsDialog } from './settings-dialog';
 
 export function Header() {

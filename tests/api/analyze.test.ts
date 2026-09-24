@@ -1,8 +1,8 @@
+import { NextRequest } from 'next/server';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '@/app/api/analyze/route';
 import { ai } from '@/lib/ai/client';
 import { checkRateLimit } from '@/lib/rateLimit';
-import { NextRequest } from 'next/server';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/lib/ai/client', () => ({
 	ai: {

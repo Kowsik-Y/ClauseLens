@@ -1,5 +1,9 @@
 'use client';
 
+import { FileUp, Loader2, Plus } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import { useCallback, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
 	Dialog,
@@ -9,10 +13,6 @@ import {
 	DialogTitle,
 } from '@/components/ui/dialog';
 import type { AnalysisResult } from '@/lib/types';
-import { FileUp, Loader2, Plus } from 'lucide-react';
-import dynamic from 'next/dynamic';
-import { useCallback, useRef, useState } from 'react';
-import { toast } from 'sonner';
 
 const AnalysisDashboard = dynamic(
 	() =>
@@ -52,7 +52,11 @@ export default function AnalyzePage() {
 			text,
 			file,
 			mode,
-		}: { text: string; file?: File; mode: string }) => {
+		}: {
+			text: string;
+			file?: File;
+			mode: string;
+		}) => {
 			setIsDialogOpen(false); // Close dialog immediately when analysis starts
 
 			if (abortControllerRef.current) {

@@ -1,5 +1,5 @@
-import { DEFAULT_MODEL, ai } from '@/lib/ai/client';
 import { describe, expect, it } from 'vitest';
+import { ai, DEFAULT_MODEL } from '@/lib/ai/client';
 
 describe('AI Client', () => {
 	it('initializes the client', () => {

@@ -1,9 +1,9 @@
+import { describe, expect, it } from 'vitest';
 import {
 	sanitizeText,
 	validateFileSize,
 	validateFileType,
 } from '@/lib/validators';
-import { describe, expect, it } from 'vitest';
 
 describe('validateFileType', () => {
 	it('accepts PDF files', () => {

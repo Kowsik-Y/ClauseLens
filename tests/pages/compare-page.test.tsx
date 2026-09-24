@@ -1,6 +1,6 @@
-import ComparePage from '@/app/compare/page';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import ComparePage from '@/app/compare/page';
 
 vi.mock('@/components/compare-panel', () => ({
 	ComparePanel: () => <div data-testid='compare-panel'>ComparePanel Mock</div>,

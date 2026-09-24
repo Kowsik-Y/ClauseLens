@@ -1,23 +1,5 @@
 'use client';
 
-import { RiskBadge } from '@/components/RiskBadge';
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import type { AnalysisResult } from '@/lib/types';
 import {
 	AlertCircle,
 	AlertTriangle,
@@ -30,6 +12,23 @@ import {
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
+import { RiskBadge } from '@/components/RiskBadge';
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import type { AnalysisResult } from '@/lib/types';
 
 const AskPanel = dynamic(() => import('./ask-panel').then((m) => m.AskPanel), {
 	loading: () => (
@@ -38,6 +37,7 @@ const AskPanel = dynamic(() => import('./ask-panel').then((m) => m.AskPanel), {
 		</div>
 	),
 });
+
 import { ChecklistPanel } from './checklist-panel';
 
 function getSeverityIcon(severity: string) {
@@ -56,7 +56,10 @@ function getSeverityIcon(severity: string) {
 export const AnalysisDashboard = React.memo(function AnalysisDashboard({
 	result,
 	documentText,
-}: { result: AnalysisResult; documentText: string }) {
+}: {
+	result: AnalysisResult;
+	documentText: string;
+}) {
 	const [isChatOpen, setIsChatOpen] = useState(false);
 
 	return (

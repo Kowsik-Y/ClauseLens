@@ -1,5 +1,5 @@
-import { checkRateLimit } from '@/lib/rateLimit';
 import { type NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 export const maxDuration = 60;
 

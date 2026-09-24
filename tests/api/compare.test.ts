@@ -1,8 +1,8 @@
+import { NextRequest } from 'next/server';
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 import { POST } from '@/app/api/compare/route';
 import { ai } from '@/lib/ai/client';
 import { checkRateLimit } from '@/lib/rateLimit';
-import { NextRequest } from 'next/server';
-import { type Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/lib/rateLimit', () => ({
 	checkRateLimit: vi.fn(),

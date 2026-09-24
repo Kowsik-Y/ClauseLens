@@ -1,8 +1,8 @@
+import type { Metadata } from 'next';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import { Header } from '@/components/Header';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 
 const fontSans = Inter({
@@ -44,7 +44,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
 	children,
-}: { children: React.ReactNode }) {
+}: {
+	children: React.ReactNode;
+}) {
 	return (
 		<html
 			lang='en'

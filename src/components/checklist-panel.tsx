@@ -1,3 +1,5 @@
+import { CheckCircle2, FileQuestion, HelpCircle, ListTodo } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -16,13 +18,14 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import { CheckCircle2, FileQuestion, HelpCircle, ListTodo } from 'lucide-react';
-import { useState } from 'react';
 
 export function ChecklistPanel({
 	checklist,
 	questions,
-}: { checklist: string[]; questions: string[] }) {
+}: {
+	checklist: string[];
+	questions: string[];
+}) {
 	const [checkedItems, setCheckedItems] = useState<boolean[]>([]);
 
 	const toggleCheck = (index: number) => {

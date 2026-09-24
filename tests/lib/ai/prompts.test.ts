@@ -1,5 +1,5 @@
-import { buildAnalysisPrompt } from '@/lib/ai/prompts';
 import { describe, expect, it } from 'vitest';
+import { buildAnalysisPrompt } from '@/lib/ai/prompts';
 
 describe('buildAnalysisPrompt', () => {
 	it('includes document text in prompt', () => {

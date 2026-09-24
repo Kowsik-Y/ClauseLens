@@ -1,5 +1,7 @@
 'use client';
 
+import { AlertCircle, Loader2, MessageSquare, Send } from 'lucide-react';
+import { useCallback, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -11,8 +13,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { QaResult } from '@/lib/types';
-import { AlertCircle, Loader2, MessageSquare, Send } from 'lucide-react';
-import { useCallback, useRef, useState } from 'react';
 
 const SUGGESTIONS = [
 	'Can I terminate this agreement early?',

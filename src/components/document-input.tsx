@@ -1,5 +1,7 @@
 'use client';
 
+import { FileText, UploadCloud, X } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -19,12 +21,12 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { FileText, UploadCloud, X } from 'lucide-react';
-import { useRef, useState } from 'react';
 
 export function DocumentInput({
 	onAnalyze,
-}: { onAnalyze: (data: { text: string; file?: File; mode: string }) => void }) {
+}: {
+	onAnalyze: (data: { text: string; file?: File; mode: string }) => void;
+}) {
 	const [file, setFile] = useState<File | null>(null);
 	const [text, setText] = useState('');
 	const [mode, setMode] = useState('Full Analysis');

@@ -1,5 +1,3 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
 	ArrowRight,
 	BookOpen,
@@ -9,6 +7,8 @@ import {
 	Zap,
 } from 'lucide-react';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 export function Hero() {
 	return (

@@ -1,9 +1,10 @@
 import { Badge } from '@/components/ui/badge';
-import React from 'react';
 
 export function RiskBadge({
 	severity,
-}: { severity: 'high' | 'medium' | 'low' | 'HIGH' | 'MEDIUM' | 'LOW' }) {
+}: {
+	severity: 'high' | 'medium' | 'low' | 'HIGH' | 'MEDIUM' | 'LOW';
+}) {
 	const normSeverity = severity.toLowerCase() as 'high' | 'medium' | 'low';
 
 	const colorClasses = {

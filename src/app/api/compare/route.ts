@@ -1,9 +1,9 @@
-import { DEFAULT_MODEL, ai } from '@/lib/ai/client';
-import { checkRateLimit } from '@/lib/rateLimit';
-import { sanitizeText, scanForInjectionArtifacts } from '@/lib/validators';
 import { type Schema, Type } from '@google/genai';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { ai, DEFAULT_MODEL } from '@/lib/ai/client';
+import { checkRateLimit } from '@/lib/rateLimit';
+import { sanitizeText, scanForInjectionArtifacts } from '@/lib/validators';
 
 export const maxDuration = 60;
 

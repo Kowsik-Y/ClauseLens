@@ -1,5 +1,5 @@
-import { extractTextPreview, truncateText } from '@/lib/parsers';
 import { describe, expect, it } from 'vitest';
+import { extractTextPreview, truncateText } from '@/lib/parsers';
 
 describe('truncateText', () => {
 	it('truncates text longer than limit', () => {

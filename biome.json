@@ -1,8 +1,6 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-	"organizeImports": {
-		"enabled": true
-	},
+	"$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
+	"assist": { "actions": { "source": { "organizeImports": "on" } } },
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -33,10 +31,21 @@
 		}
 	},
 	"files": {
-		"ignore": ["node_modules/*", "tsconfig.json", ".turbo", ".next"]
+		"includes": [
+			"**",
+			"!**/node_modules/**/*",
+			"!**/tsconfig.json",
+			"!**/.turbo",
+			"!**/.next"
+		]
 	},
 	"formatter": {
 		"enabled": true
+	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
 	},
 	"javascript": {
 		"formatter": {

@@ -1,5 +1,7 @@
 'use client';
 
+import { Settings } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
 	Dialog,
@@ -18,8 +20,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { Settings } from 'lucide-react';
-import { useEffect, useState } from 'react';
 
 export function SettingsDialog() {
 	const [theme, setTheme] = useState<'light' | 'dark'>('light');

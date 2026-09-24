@@ -1,5 +1,15 @@
 'use client';
 
+import {
+	ArrowRight,
+	FileDiff,
+	GitCompare,
+	Loader2,
+	Plus,
+	UploadCloud,
+} from 'lucide-react';
+import { useCallback, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,16 +29,6 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
 import type { ComparisonResult } from '@/lib/types';
-import {
-	ArrowRight,
-	FileDiff,
-	GitCompare,
-	Loader2,
-	Plus,
-	UploadCloud,
-} from 'lucide-react';
-import { useCallback, useRef, useState } from 'react';
-import { toast } from 'sonner';
 
 export function ComparePanel() {
 	const [docA, setDocA] = useState('');
@@ -269,6 +269,7 @@ export function ComparePanel() {
 							<ScrollArea className='max-h-150'>
 								<div className='divide-y'>
 									{result.changes.map((change, idx) => (
+										// biome-ignore lint/suspicious/noArrayIndexKey: result array is static and not reordered
 										<div
 											key={`${change.category}-${idx}`}
 											className='p-6 hover:bg-muted/10 transition-colors'

@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import {
-	type MockInstance,
 	afterEach,
 	beforeEach,
 	describe,
 	expect,
 	it,
+	type MockInstance,
 	vi,
 } from 'vitest';
 import { SettingsDialog } from '../../src/components/settings-dialog';
