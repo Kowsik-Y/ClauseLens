@@ -268,10 +268,9 @@ export function ComparePanel() {
 						{result.changes && result.changes.length > 0 ? (
 							<ScrollArea className='max-h-150'>
 								<div className='divide-y'>
-									{result.changes.map((change, idx) => (
-										// biome-ignore lint/suspicious/noArrayIndexKey: result array is static and not reordered
+									{result.changes.map((change) => (
 										<div
-											key={`${change.category}-${idx}`}
+											key={`${change.category}-${change.impact}-${change.documentA.substring(0, 20)}`}
 											className='p-6 hover:bg-muted/10 transition-colors'
 										>
 											<div className='flex items-center justify-between mb-4'>
